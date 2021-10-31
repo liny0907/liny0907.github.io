@@ -1,6 +1,7 @@
 
-# This is Lin's awesome website
+# This is Lin's first website!
 
-![](https://media.giphy.com/media/drXGoW1iudhKw/giphy.gif)
+<img src="images/img_linyang.jpg" style="width:75%">
+
 
 Here's the link to my [resume](about.html).

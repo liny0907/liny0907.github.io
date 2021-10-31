@@ -1,0 +1,2816 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Dashboard</title>
+
+<meta property="og:title" content="Dashboard" />
+
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+
+<link rel="icon" href="data:image/x-icon;" type="image/x-icon">
+
+
+<script type="text/javascript">
+window.FlexDashboardComponents = [];
+</script>
+
+<script id="flexdashboard-navbar" type="application/json">
+[{"title":"Source Code","icon":"fa-code","href":"source_embed","align":"right"}]
+</script>
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/stickytableheaders-0.1.19/jquery.stickytableheaders.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="site_libs/featherlight-1.3.5/featherlight.min.css" rel="stylesheet" />
+<script src="site_libs/featherlight-1.3.5/featherlight.min.js"></script>
+<link href="site_libs/prism-1.4.1/prism.css" rel="stylesheet" />
+<script src="site_libs/prism-1.4.1/prism.js"></script>
+<script src="site_libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.0/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.5.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-2.5.1/plotly-latest.min.js"></script>
+<style type="text/css">
+
+/*
+ Dashboard CSS from Keen IO Dashboards
+ (https://github.com/keen/dashboards)
+*/
+
+body {
+  background: #f2f2f2;
+  padding: 60px 0 0 8px; /* padding-top overridden by theme */
+}
+
+body hr {
+  border-color: #d7d7d7;
+  margin: 10px 0;
+}
+
+.navbar-inverse .navbar-nav > li > a,
+.navbar .navbar-brand {
+  text-decoration: none;
+}
+
+.navbar-logo {
+  margin-top: 1px;
+}
+
+.navbar-logo img {
+  margin-right: 12px;
+}
+
+.navbar-author {
+  margin-left: 10px;
+  font-size: 15px;
+}
+
+.navbar .dropdown-menu .fa {
+  min-width: 20px;
+}
+
+.navbar .dropdown-menu {
+  min-width: 150px;
+  max-height: 500px;
+  overflow: auto;
+}
+
+.chart-wrapper,
+.nav-tabs-custom,
+.sbframe-commentary
+{
+  background: #fff;
+  border: 1px solid #e2e2e2;
+  border-radius: 3px;
+  margin-bottom: 8px;
+  margin-right: 8px;
+}
+
+.chart-title {
+  border-bottom: 1px solid #d7d7d7;
+  color: #666;
+  font-size: 14px;
+  font-weight: 300;
+  padding: 7px 10px 4px;
+}
+
+.chart-wrapper .chart-title:empty {
+  display: none;
+}
+
+.chart-wrapper .chart-stage {
+  overflow: hidden;
+  padding: 5px 10px;
+  position: relative;
+}
+
+.chart-wrapper .chart-notes {
+  background: #fbfbfb;
+  border-top: 1px solid #e2e2e2;
+  color: #808080;
+  font-size: 12px;
+  padding: 8px 10px 5px;
+}
+
+/*
+ CSS for handling flexbox layout
+*/
+
+#dashboard-container {
+  visibility: hidden;
+}
+
+.tab-content>.dashboard-page-wrapper.active {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.dashboard-page-wrapper {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.dashboard-row-orientation {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.dashboard-row {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.dashboard-row-flex {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+
+.dashboard-column-orientation {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.dashboard-column {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.chart-wrapper-flex {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.chart-stage-flex {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  position: relative;
+}
+
+.chart-shim {
+  position: absolute;
+  left: 8px; top: 8px; right: 8px; bottom: 8px;
+}
+
+.no-padding .chart-shim {
+  left: 0; top: 0; right: 0; bottom: 0;
+}
+
+.flowing-content-shim {
+  overflow: auto;
+  left: 0; top: 0; right: 0; bottom: 0;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.flowing-content-container {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.chart-stage .table-bordered {
+  border: none;
+}
+
+.chart-stage .table-bordered > tbody > tr > th,
+.chart-stage .table-bordered > tfoot > tr > th,
+.chart-stage .table-bordered > tbody > tr > td,
+.chart-stage .table-bordered > tfoot > tr > td {
+  border: none;
+}
+
+.chart-stage .table-bordered > tbody > tr > td {
+  border-top: 1px solid #dddddd;
+}
+
+.chart-stage .table-bordered > thead > tr > th {
+  border: none;
+  border-bottom: 2px solid #dddddd;
+}
+
+.bootstrap-table table>thead {
+  background-color: #fff;
+}
+
+.bootstrap-table table.data,
+.bootstrap-table table.shiny-table {
+  width: inherit !important;
+}
+
+.bootstrap-table table.data>tbody>tr>th,
+.bootstrap-table table.shiny-table>tbody>tr>th {
+  border-top: none;
+  border-bottom: 2px solid #dddddd;
+  padding: 5px;
+}
+
+.bootstrap-table .data td[align=right] {
+  font-family: inherit;
+}
+
+.chart-wrapper form {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.shiny-input-container label {
+  font-weight: normal;
+}
+
+.chart-stage .html-widget {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.chart-stage .html-widget-static-bound {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.chart-stage .shiny-bound-output {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Omit display of empty paragraphs */
+
+.chart-shim>p:empty {
+  display: none;
+}
+
+.chart-stage>p:empty {
+  display: none;
+}
+
+/* Omit display of special knitr options div*/
+
+.chart-stage .knitr-options {
+  display: none;
+}
+
+/* Automatically resizing images */
+
+.image-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+}
+
+.image-container img {
+  opacity: 0;
+  overflow: hidden;
+}
+
+/* Value box */
+
+.value-box {
+  border-radius: 2px;
+  position: relative;
+  display: block;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.value-box > .inner {
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.value-box .value {
+  font-size: 38px;
+  font-weight: bold;
+  margin: 0 0 3px 0;
+  white-space: nowrap;
+  padding: 0;
+}
+
+.value-box .caption {
+  font-size: 15px;
+}
+.value-box .caption > small {
+  display: block;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+.value-box .icon i {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 80px;
+  color: rgba(0, 0, 0, 0.15);
+}
+
+.linked-value:hover {
+  cursor: pointer;
+}
+
+.value-box.linked-value:hover {
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* STORYBOARD */
+
+.storyboard-nav button {
+  background: transparent;
+  border: 0;
+  opacity: .3;
+  outline: none;
+  padding: 0;
+}
+
+.storyboard-nav button:hover,
+.storyboard-nav button:hover {
+  opacity: .5;
+}
+
+.storyboard-nav button:disabled,
+.storyboard-nav button:disabled {
+  opacity: .1;
+}
+
+.storyboard-nav .sbnext,
+.storyboard-nav .sbprev {
+  float: left;
+  width: 2%;
+  height: 120px;
+  font-size: 50px;
+}
+
+.storyboard-nav .sbprev {
+  text-align: left;
+  width: 2%;
+}
+
+.storyboard-nav .sbnext {
+  float: right;
+  text-align: right;
+  margin-right: 8px;
+}
+
+.storyboard-nav .sbframelist {
+  margin: 0 auto;
+  width: 94%;
+  height: 120px;
+  overflow: hidden;
+  text-shadow: none;
+  margin-bottom: 8px;
+}
+
+.storyboard-nav .sbframelist ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.storyboard-nav .sbframelist ul li {
+  float: left;
+  width: 270px;
+  height: 100%;
+  padding: 10px 10px 10px 10px;
+  margin-right: 8px;
+  background: #fff;
+  border: 1px solid #e2e2e2;
+  border-radius: 3px;
+  color: #3a3c47;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.storyboard-nav .sbframelist ul li:last-child {
+  margin-right: 0px;
+}
+
+.storyboard-nav .sbframelist ul li.active {
+  color: #fff;
+  background: #B8B8B8;
+}
+
+.sbframe-commentary {
+  width: 300px;
+  background: #fbfbfb;
+  font-size: 14px;
+}
+
+.sbframe-commentary ul {
+  padding-left: 22px;
+}
+
+.sbframe.active {
+  display: flex;
+}
+
+.sbframe:not(.active) {
+  display: none;
+}
+
+/* NAV TABS */
+
+.nav-tabs-custom > .nav-tabs {
+  margin: 0;
+  border-bottom: 1px solid #d7d7d7;
+  color: #666;
+  font-size: 14px;
+  font-weight: 300;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+.nav-tabs-custom > .nav-tabs > li {
+  border-top: 3px solid transparent;
+  margin-bottom: -1px;
+  margin-right: 5px;
+}
+.nav-tabs-custom > .nav-tabs > li > a,
+.nav-tabs-custom > .nav-tabs > li > a:active {
+  color: #666;
+  font-weight: 300;
+  font-size: 14px;
+  border-radius: 0;
+  padding: 3px 10px 5px;
+  text-transform: none;
+}
+
+.nav-tabs-custom > .nav-tabs > li:not(.active) > a {
+  border-bottom-color: transparent;
+}
+
+.nav-tabs-custom > .nav-tabs > li > a.text-muted {
+  color: #999;
+}
+.nav-tabs-custom > .nav-tabs > li > a,
+.nav-tabs-custom > .nav-tabs > li > a:hover {
+  background: transparent;
+  margin: 0;
+}
+.nav-tabs-custom > .nav-tabs > li > a:hover {
+  color: #999;
+}
+.nav-tabs-custom > .nav-tabs > li:not(.active) > a:hover,
+.nav-tabs-custom > .nav-tabs > li:not(.active) > a:focus,
+.nav-tabs-custom > .nav-tabs > li:not(.active) > a:active {
+  border-color: transparent;
+}
+.nav-tabs-custom > .nav-tabs > li.active {
+  border-top-color: #3c8dbc;
+}
+.nav-tabs-custom > .nav-tabs > li.active > a,
+.nav-tabs-custom > .nav-tabs > li.active:hover > a {
+  background-color: #fff;
+  color: #666;
+}
+.nav-tabs-custom > .nav-tabs > li.active > a {
+  border-top-color: transparent;
+  border-left-color: #d7d7d7;
+  border-right-color: #d7d7d7;
+}
+.nav-tabs-custom > .nav-tabs > li:first-of-type {
+  margin-left: 0;
+}
+.nav-tabs-custom > .nav-tabs > li:first-of-type.active > a {
+  border-left-color: transparent;
+}
+.nav-tabs-custom > .nav-tabs.pull-right {
+  float: none !important;
+}
+.nav-tabs-custom > .nav-tabs.pull-right > li {
+  float: right;
+}
+.nav-tabs-custom > .nav-tabs.pull-right > li:first-of-type {
+  margin-right: 0;
+}
+.nav-tabs-custom > .nav-tabs.pull-right > li:first-of-type > a {
+  border-left-width: 1px;
+}
+.nav-tabs-custom > .nav-tabs.pull-right > li:first-of-type.active > a {
+  border-left-color: #d7d7d7;
+  border-right-color: transparent;
+}
+.nav-tabs-custom > .nav-tabs > li.header {
+  line-height: 35px;
+  padding: 0 10px;
+  font-size: 20px;
+  color: #666;
+}
+.nav-tabs-custom > .nav-tabs > li.header > .fa,
+.nav-tabs-custom > .nav-tabs > li.header > .glyphicon,
+.nav-tabs-custom > .nav-tabs > li.header > .ion {
+  margin-right: 5px;
+}
+.nav-tabs-custom > .tab-content {
+  background: #fff;
+  padding: 0;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.nav-tabs-custom > .tab-content > .chart-wrapper {
+  background: #fff;
+  border: none;
+  margin: 0;
+}
+
+
+.nav-tabs-custom > .tab-content > .active {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.nav-tabs-custom .dropdown.open > a:active,
+.nav-tabs-custom .dropdown.open > a:focus {
+  background: transparent;
+  color: #999;
+}
+
+
+@media (max-width: 767px) {
+  .value-box {
+    text-align: center;
+    margin-right: 8px;
+  }
+  .value-box .icon {
+    display: none;
+  }
+}
+
+/* Fixed position sidebar */
+
+.section.sidebar {
+  position: fixed;
+  top: 51px; /* overridden by theme */
+  left: 0;
+  bottom: 0;
+  border-right: 1px solid #e2e2e2;
+  background-color: white; /* overridden by theme */
+  padding-left: 10px;
+  padding-right: 10px;
+  visibility: hidden;
+  overflow: auto;
+}
+
+.section.sidebar form p:first-child {
+  margin-top: 10px;
+}
+
+/* Embedded source code */
+
+#flexdashboard-source-code {
+  display: none;
+}
+
+.featherlight-content #flexdashboard-source-code {
+  display: inline-block;
+}
+
+.featherlight-content {
+  width: 80%;
+  max-width: 800px;
+  padding: 0 !important;
+  border-bottom: none !important;
+}
+
+.featherlight:last-of-type {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.featherlight-inner {
+  width: 100%;
+}
+
+.featherlight-content pre {
+  margin: 0;
+  border: 0;
+  background: #fff;
+  font-size: 12px;
+}
+
+.unselectable {
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: -moz-none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+#flexdashboard-source-code code {
+  -ms-user-select: text;
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -o-user-select: text;
+  user-select: text;
+}
+
+/* DataTables Tweaks */
+
+.dataTables_filter input[type="search"] {
+  -webkit-appearance: searchfield;
+  outline: none;
+}
+
+.dataTables_wrapper.no-footer
+.dataTables_info {
+  padding-top: 0;
+}
+
+
+table.dataTable thead th {
+  border-bottom: 1px solid #d7d7d7;
+}
+
+.dataTables_wrapper.no-footer .dataTables_scrollBody {
+  border-bottom: 1px solid #d7d7d7;
+}
+
+/* Mobile phone only CSS */
+
+.desktop-layout div.section.mobile {
+  display: none;
+}
+
+.mobile-layout div.section.no-mobile {
+  display: none;
+}
+
+.mobile-figure {
+  display: none;
+}
+
+
+
+body {
+  padding-top: 60px;
+}
+
+.section.sidebar {
+  top: 51px;
+  background-color: rgba(39, 128, 227, 0.1);
+}
+
+.value-box {
+  color: #f9f9f9;
+}
+
+.bg-primary {
+  background-color: rgba(39, 128, 227, 0.7);
+}
+
+.storyboard-nav .sbframelist ul li.active {
+  background-color: rgba(39, 128, 227, 0.7);
+}
+
+.nav-tabs-custom > .nav-tabs > li.active {
+  border-top-color: rgba(39, 128, 227, 0.7);
+}
+
+.bg-info {
+  background-color: rgba(153, 84, 187, 0.7);
+}
+
+.bg-warning {
+  background-color: rgba(255, 117, 24, 0.7);
+}
+
+.bg-danger {
+  background-color: rgba(255, 0, 57, 0.7);
+}
+
+.bg-success {
+  background-color: rgba(63, 182, 24, 0.7);
+}
+
+.chart-title {
+  font-weight: 500;
+}
+
+.nav-tabs-custom > .nav-tabs > li > a,
+.nav-tabs-custom > .nav-tabs > li > a:active {
+  font-weight: 500;
+}
+
+@media only screen and (min-width: 768px) {
+html, body {
+  height: 100%;
+}
+
+#dashboard-container {
+  height: 100%;
+}
+}
+</style>
+
+
+
+</head>
+
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<div class="container-fluid">
+<div class="navbar-header">
+
+<button id="navbar-button" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+
+<span class="navbar-logo pull-left">
+  
+</span>
+<span class="navbar-brand">
+  Dashboard
+  <span class="navbar-author">
+        </span>
+</span>
+
+</div>
+<div id="navbar" class="navbar-collapse collapse">
+<ul class="nav navbar-nav navbar-left">
+</ul>
+<ul class="nav navbar-nav navbar-right">
+</ul>
+</div><!--/.nav-collapse-->
+</div><!--/.container-->
+</div><!--/.navbar-->
+
+<script type="text/javascript">
+
+
+var FlexDashboard = (function () {
+
+  // initialize options
+  var _options = {};
+
+  var FlexDashboard = function() {
+
+    // default options
+    _options = $.extend(_options, {
+      theme: "cosmo",
+      fillPage: false,
+      orientation: 'columns',
+      storyboard: false,
+      defaultFigWidth: 576,
+      defaultFigHeight: 461,
+      defaultFigWidthMobile: 360,
+      defaultFigHeightMobile: 461,
+      isMobile: false,
+      isPortrait: false,
+      resize_reload: true
+    });
+  };
+
+  function init(options) {
+
+    // extend default options
+    $.extend(true, _options, options);
+
+    // add ids to sections that don't have them (pandoc won't assign ids
+    // to e.g. sections with titles consisting of only chinese characters)
+    var nextId = 1;
+    $('.level1:not([id]),.level2:not([id]),.level3:not([id])').each(function() {
+      $(this).attr('id', 'dashboard-' + nextId++);
+    });
+
+    // find navbar items
+    var navbarItems = $('#flexdashboard-navbar');
+    if (navbarItems.length)
+      navbarItems = JSON.parse(navbarItems.html());
+    addNavbarItems(navbarItems);
+
+    // find the main dashboard container
+    var dashboardContainer = $('#dashboard-container');
+
+    // resolve mobile classes
+    resolveMobileClasses(dashboardContainer);
+
+    // one time global initialization for components
+    componentsInit(dashboardContainer);
+
+    // look for a global sidebar
+    var globalSidebar = dashboardContainer.find(".section.level1.sidebar");
+    if (globalSidebar.length > 0) {
+
+      // global layout for fullscreen displays
+      if (!isMobilePhone()) {
+
+         // hoist it up to the top level
+         globalSidebar.insertBefore(dashboardContainer);
+
+         // lay it out (set width/positions)
+         layoutSidebar(globalSidebar, dashboardContainer);
+
+      // tuck sidebar into first page for mobile phones
+      } else {
+
+        // convert it into a level3 section
+        globalSidebar.removeClass('sidebar');
+        globalSidebar.removeClass('level1');
+        globalSidebar.addClass('level3');
+        var h1 = globalSidebar.children('h1');
+        var h3 = $('<h3></h3>');
+        h3.append(h1.contents());
+        h3.insertBefore(h1);
+        h1.detach();
+
+        // move it into the first page
+        var page = dashboardContainer.find('.section.level1').first();
+        if (page.length > 0)
+          page.prepend(globalSidebar);
+      }
+    }
+
+    // look for pages to layout
+    var pages = $('div.section.level1');
+    if (pages.length > 0) {
+
+        // find the navbar and collapse on clicked
+        var navbar = $('#navbar');
+        navbar.on("click", "a[data-toggle!=dropdown]", null, function () {
+           navbar.collapse('hide');
+        });
+
+        // envelop the dashboard container in a tab content div
+        dashboardContainer.wrapInner('<div class="tab-content"></div>');
+
+        pages.each(function(index) {
+
+          // lay it out
+          layoutDashboardPage($(this));
+
+          // add it to the navbar
+          addToNavbar($(this), index === 0);
+
+        });
+
+    } else {
+
+      // remove the navbar and navbar button if we don't
+      // have any navbuttons
+      if (navbarItems.length === 0) {
+        $('#navbar').remove();
+        $('#navbar-button').remove();
+      }
+
+      // add the storyboard class if requested
+      if (_options.storyboard)
+        dashboardContainer.addClass('storyboard');
+
+      // layout the entire page
+      layoutDashboardPage(dashboardContainer);
+    }
+
+    // if we are in shiny we need to trigger a window resize event to
+    // force correct layout of shiny-bound-output elements
+    if (isShinyDoc())
+      $(window).trigger('resize');
+
+    // make main components visible
+    $('.section.sidebar').css('visibility', 'visible');
+    dashboardContainer.css('visibility', 'visible');
+
+    // handle location hash
+    handleLocationHash();
+
+    // intialize prism highlighting
+    initPrismHighlighting();
+
+    // record mobile and orientation state then register a handler
+    // to refresh if resize_reload is set to true and it changes
+    _options.isMobile = isMobilePhone();
+    _options.isPortrait = isPortrait();
+    if (_options.resize_reload) {
+      $(window).on('resize', function() {
+        if (_options.isMobile !== isMobilePhone() ||
+            _options.isPortrait !== isPortrait()) {
+          window.location.reload();
+        }
+      });
+    } else {
+      // if in desktop mode and resizing to mobile, make sure the heights are 100%
+      // This enforces what `fillpage.css` does for "wider" pages.
+      // Since we are not reloading once the page becomes small, we need to force the height to 100%
+      // This is a new situation introduced when `_options.resize_reload` is `false`
+      if (! _options.isMobile) {
+        // only add if `fillpage.css` was added in the first place
+        if (_options.fillPage) {
+          // fillpage.css
+          $("html,body,#dashboard").css("height", "100%");
+        }
+      }
+    }
+    // trigger layoutcomplete event
+    dashboardContainer.trigger('flexdashboard:layoutcomplete');
+  }
+
+  function resolveMobileClasses(dashboardContainer) {
+     // add top level layout class
+    dashboardContainer.addClass(isMobilePhone() ? 'mobile-layout' :
+                                                  'desktop-layout');
+
+    // look for .mobile sections and add .no-mobile to their peers
+    var mobileSections = $('.section.mobile');
+    mobileSections.each(function() {
+       var id = $(this).attr('id');
+       var nomobileId = id.replace(/-\d+$/, '');
+       $('#' + nomobileId).addClass('no-mobile');
+    });
+  }
+
+  function addNavbarItems(navbarItems) {
+
+    var navbarLeft = $('ul.navbar-left');
+    var navbarRight = $('ul.navbar-right');
+
+    for (var i = 0; i<navbarItems.length; i++) {
+
+      // get the item
+      var item = navbarItems[i];
+
+      // determine the container
+      var container = null;
+      if (item.align === "left")
+        container = navbarLeft;
+      else
+        container = navbarRight;
+
+      // navbar menu if we have multiple items
+      if (item.items) {
+        var menu = navbarMenu(null, item.icon, item.title, container);
+        for (var j = 0; j<item.items.length; j++) {
+          var subItem = item.items[j];
+          var li = $('<li></li>');
+          li.append(navbarLink(subItem.icon, subItem.title, subItem.href, subItem.target));
+          menu.append(li);
+        }
+      } else {
+        var li = $('<li></li>');
+        li.append(navbarLink(item.icon, item.title, item.href, item.target));
+        container.append(li);
+      }
+    }
+  }
+
+  // create or get a reference to an existing dropdown menu
+  function navbarMenu(id, icon, title, container) {
+    var existingMenu = [];
+    if (id)
+      existingMenu = container.children('#' + id);
+    if (existingMenu.length > 0) {
+      return existingMenu.children('ul');
+    } else {
+      var li = $('<li></li>');
+      if (id)
+        li.attr('id', id);
+      li.addClass('dropdown');
+      // auto add "Share" title on mobile if necessary
+      if (!title && icon && (icon === "fa-share-alt") && isMobilePhone())
+        title = "Share";
+      if (title) {
+        title = title + ' <span class="caret"></span>';
+      }
+      var a = navbarLink(icon, title, "#");
+      a.addClass('dropdown-toggle');
+      a.attr('data-toggle', 'dropdown');
+      a.attr('role', 'button');
+      a.attr('aria-expanded', 'false');
+      li.append(a);
+      var ul = $('<ul class="dropdown-menu"></ul>');
+      ul.attr('role', 'menu');
+      li.append(ul);
+      container.append(li);
+      return ul;
+    }
+  }
+
+  function addToNavbar(page, active) {
+
+    // capture the id and data-icon attribute (if any)
+    var id = page.attr('id');
+    var icon = page.attr('data-icon');
+    var navmenu = page.attr('data-navmenu');
+
+    // get hidden state (transfer this to navbar)
+    var hidden = page.hasClass('hidden');
+    page.removeClass('hidden');
+
+    // sanitize the id for use with bootstrap tabs
+    id = id.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_');
+    page.attr('id', id);
+
+    // get the wrapper
+    var wrapper = page.closest('.dashboard-page-wrapper');
+
+    // move the id to the wrapper
+    page.removeAttr('id');
+    wrapper.attr('id', id);
+
+    // add the tab-pane class to the wrapper
+    wrapper.addClass('tab-pane');
+    if (active)
+      wrapper.addClass('active');
+
+    // get a reference to the h1, discover its inner contens, then detach it
+    var h1 = wrapper.find('h1').first();
+    var title = h1.contents();
+    h1.detach();
+
+    // create a navbar item
+    var li = $('<li></li>');
+    var a = navbarLink(icon, title, '#' + id);
+    a.attr('data-toggle', 'tab');
+    li.append(a);
+
+    // add it to the navbar (or navbar menu if specified)
+    var container = $('ul.navbar-left');
+    if (navmenu) {
+      var menuId = navmenu.replace(/\s+/g, '');
+      var menu = navbarMenu(menuId, null, navmenu, container);
+      menu.append(li);
+    } else {
+      container.append(li);
+    }
+
+    // hide it if requested
+    if (hidden)
+      li.addClass('hidden');
+  }
+
+  function navbarLink(icon, title, href, target) {
+
+    var a = $('<a></a>');
+    if (icon) {
+
+      // get the name of the icon set and icon
+      var dashPos = icon.indexOf("-");
+      var iconSet = null;
+      var iconSplit = icon.split(" ");
+      if (iconSplit.length > 1) {
+        iconSet = iconSplit[0];
+        icon = iconSplit.slice(1).join(" ");
+      } else {
+        iconSet = icon.substring(0, dashPos);
+      }
+      var iconName = icon.substring(dashPos + 1);
+
+      // create the icon
+      var iconElement = $('<span class="' + iconSet + ' ' + icon + '"></span>');
+      if (title)
+        iconElement.css('margin-right', '7px');
+      a.append(iconElement);
+      // if href is null see if we can auto-generate based on icon (e.g. social)
+      if (!href)
+        maybeGenerateLinkFromIcon(iconName, a);
+    }
+    if (title)
+      a.append(title);
+
+    // add the href.
+    if (href) {
+      if (href === "source_embed") {
+        a.attr('href', '#');
+        a.attr('data-featherlight', "#flexdashboard-source-code");
+        a.featherlight({
+            beforeOpen: function(event){
+              $('body').addClass('unselectable');
+            },
+            afterClose: function(event){
+              $('body').removeClass('unselectable');
+            }
+        });
+      } else {
+        a.attr('href', href);
+      }
+    }
+
+    // add the arget
+    if (target)
+      a.attr('target', target);
+
+    return a;
+  }
+
+  // auto generate a link from an icon name (e.g. twitter) when possible
+  function maybeGenerateLinkFromIcon(iconName, a) {
+
+     var serviceLinks = {
+      "twitter": "https://twitter.com/share?text=" + encodeURIComponent(document.title) + "&url="+encodeURIComponent(location.href),
+      "facebook": "https://www.facebook.com/sharer/sharer.php?s=100&p[url]="+encodeURIComponent(location.href),
+      "google-plus": "https://plus.google.com/share?url="+encodeURIComponent(location.href),
+      "linkedin": "https://www.linkedin.com/shareArticle?mini=true&url="+encodeURIComponent(location.href) + "&title=" + encodeURIComponent(document.title),
+      "pinterest": "https://pinterest.com/pin/create/link/?url="+encodeURIComponent(location.href) + "&description=" + encodeURIComponent(document.title)
+    };
+
+    var makeSocialLink = function(a, href) {
+      a.attr('href', '#');
+      a.on('click', function(e) {
+        e.preventDefault();
+        window.open(href);
+      });
+    };
+
+    $.each(serviceLinks, function(key, value) {
+      if (iconName.indexOf(key) !== -1)
+        makeSocialLink(a, value);
+    });
+  }
+
+  // layout a dashboard page
+  function layoutDashboardPage(page) {
+
+    // use a page wrapper so that free form content above the
+    // dashboard appears at the top rather than the side (as it
+    // would without the wrapper in a column orientation)
+    var wrapper = $('<div class="dashboard-page-wrapper"></div>');
+    page.wrap(wrapper);
+
+    // if there are no level2 or level3 headers synthesize a level3
+    // header to contain the (e.g. frame it, scroll container, etc.)
+    var headers = page.find('h2,h3');
+    if (headers.length === 0)
+      page.wrapInner('<div class="section level3"></div>');
+
+    // hoist up any content before level 2 or level 3 headers
+    var children = page.children();
+    children.each(function(index) {
+      if ($(this).hasClass('level2') || $(this).hasClass('level3'))
+        return false;
+      $(this).insertBefore(page);
+    });
+
+    // determine orientation and fillPage behavior for distinct media
+    var orientation, fillPage, storyboard;
+
+    // media: mobile phone
+    if (isMobilePhone()) {
+
+      // if there is a sidebar we need to ensure it's content
+      // is properly framed as an h3
+      var sidebar = page.find('.section.sidebar');
+      sidebar.removeClass('sidebar');
+      sidebar.wrapInner('<div class="section level3"></div>');
+      var h2 = sidebar.find('h2');
+      var h3 = $('<h3></h3>');
+      h3.append(h2.contents());
+      h3.insertBefore(h2);
+      h2.detach();
+
+      // wipeout h2 elements then enclose them in a single h2
+      var level2 = page.find('div.section.level2');
+      level2.each(function() {
+        level2.children('h2').remove();
+        level2.children().unwrap();
+      });
+      page.wrapInner('<div class="section level2"></div>');
+
+      // substitute mobile images
+      if (isPortrait()) {
+        var mobileFigures = $('img.mobile-figure');
+        mobileFigures.each(function() {
+          // get the src (might be base64 encoded)
+          var src = $(this).attr('src');
+
+          // find it's peer
+          var id = $(this).attr('data-mobile-figure-id');
+          var img = $('img[data-figure-id=' + id + "]");
+          img.attr('src', src)
+             .attr('width', _options.defaultFigWidthMobile)
+             .attr('height', _options.defaultFigHeightMobile);
+        });
+      }
+
+      // hoist storyboard commentary into it's own section
+      if (page.hasClass('storyboard')) {
+        var commentaryHR = page.find('div.section.level3 hr');
+        commentaryHR.each(function() {
+          var commentary = $(this).nextAll().detach();
+          var commentarySection = $('<div class="section level3"></div>');
+          commentarySection.append(commentary);
+          commentarySection.insertAfter($(this).closest('div.section.level3'));
+          $(this).remove();
+        });
+      }
+
+      // force a non full screen layout by columns
+      orientation = _options.orientation = 'columns';
+      fillPage = _options.fillPage = false;
+      storyboard = _options.storyboard = false;
+
+    // media: desktop
+    } else {
+
+      // determine orientation
+      orientation = page.attr('data-orientation');
+      if (orientation !== 'rows' && orientation != 'columns')
+        orientation = _options.orientation;
+
+      // determine storyboard mode
+      storyboard = page.hasClass('storyboard');
+
+      // fillPage based on options (force for storyboard)
+      fillPage = _options.fillPage || storyboard;
+
+      // handle sidebar
+      var sidebar = page.find('.section.level2.sidebar');
+      if (sidebar.length > 0)
+        layoutSidebar(sidebar, page);
+    }
+
+    // give it and it's parent divs height: 100% if we are in fillPage mode
+    if (fillPage) {
+      page.addClass('vertical-layout-fill');
+      page.css('height', '100%');
+      page.parents('div').css('height', '100%');
+    } else {
+      page.addClass('vertical-layout-scroll');
+    }
+
+    // perform the layout
+    if (storyboard)
+      layoutPageAsStoryboard(page);
+    else if (orientation === 'rows')
+      layoutPageByRows(page, fillPage);
+    else if (orientation === 'columns')
+      layoutPageByColumns(page, fillPage);
+  }
+
+  function layoutSidebar(sidebar, content) {
+
+    // get it out of the header hierarchy
+    sidebar = sidebar.first();
+    if (sidebar.hasClass('level1')) {
+      sidebar.removeClass('level1');
+      sidebar.children('h1').remove();
+    } else if (sidebar.hasClass('level2')) {
+      sidebar.removeClass('level2');
+      sidebar.children('h2').remove();
+    }
+
+    // determine width
+    var sidebarWidth = isTablet() ? 220 : 250;
+    var dataWidth = parseInt(sidebar.attr('data-width'));
+    if (dataWidth)
+      sidebarWidth = dataWidth;
+
+    // set the width and shift the page right to accomodate the sidebar
+    sidebar.css('width', sidebarWidth + 'px');
+    content.css('padding-left', sidebarWidth + 'px');
+
+    // wrap it's contents in a form
+    sidebar.wrapInner($('<form></form>'));
+  }
+
+  function layoutPageAsStoryboard(page) {
+
+    // create storyboard navigation
+    var nav = $('<div class="storyboard-nav"></div>');
+
+    // add navigation buttons
+    var prev = $('<button class="sbprev"><i class="fa fa-angle-left"></i></button>');
+    nav.append(prev);
+    var next= $('<button class="sbnext"><i class="fa fa-angle-right"></i></button>');
+    nav.append(next);
+
+    // add navigation frame
+    var frameList = $('<div class="sbframelist"></div>');
+    nav.append(frameList);
+    var ul = $('<ul></ul>');
+    frameList.append(ul);
+
+     // find all the level3 sections (those are the storyboard frames)
+    var frames = page.find('div.section.level3');
+    frames.each(function() {
+
+      // mark it
+      $(this).addClass('sbframe');
+
+      // divide it into chart content and (optional) commentary
+      $(this).addClass('dashboard-column-orientation');
+
+      // stuff the chart into it's own div w/ flex
+      $(this).wrapInner('<div class="sbframe-component"></div>');
+      setFlex($(this), 1);
+      var frame = $(this).children('.sbframe-component');
+
+      // extract the title from the h3
+      var li = $('<li></li>');
+      var h3 = frame.children('h3');
+      li.append(h3.contents());
+      h3.detach();
+      ul.append(li);
+
+      // extract commentary
+      var hr = frame.children('hr');
+      if (hr.length) {
+        var commentary = hr.nextAll().detach();
+        hr.remove();
+        var commentaryFrame = $('<div class="sbframe-commentary"></div>');
+        commentaryFrame.addClass('flowing-content-shim');
+        commentaryFrame.addClass('flowing-content-container');
+        commentaryFrame.append(commentary);
+        $(this).append(commentaryFrame);
+
+        // look for a data-commentary-width attribute
+        var commentaryWidth = $(this).attr('data-commentary-width');
+        if (commentaryWidth)
+          commentaryFrame.css('width', commentaryWidth + 'px');
+      }
+
+      // layout the chart (force flex)
+      var result = layoutChart(frame, true);
+
+      // ice the notes if there are none
+      if (!result.notes)
+        frame.find('.chart-notes').remove();
+
+      // set flex on chart
+      setFlex(frame, 1);
+    });
+
+    // create a div to hold all the frames
+    var frameContent = $('<div class="sbframe-content"></div>');
+    frameContent.addClass('dashboard-row-orientation');
+    frameContent.append(frames.detach());
+
+    // row orientation to stack nav and frame content
+    page.addClass('dashboard-row-orientation');
+    page.append(nav);
+    page.append(frameContent);
+    setFlex(frameContent, 1);
+
+    // initialize sly
+    var sly = new Sly(frameList, {
+    		horizontal: true,
+    		itemNav: 'basic',
+    		smart: true,
+    		activateOn: 'click',
+    		startAt: 0,
+    		scrollBy: 1,
+    		activatePageOn: 'click',
+    		speed: 200,
+    		moveBy: 600,
+    		dragHandle: true,
+    		dynamicHandle: true,
+    		clickBar: true,
+    		keyboardNavBy: 'items',
+    		next: next,
+    		prev: prev
+    	}).init();
+
+    // make first frame active
+    frames.removeClass('active');
+    frames.first().addClass('active');
+
+    // subscribe to frame changed events
+    sly.on('active', function (eventName, itemIndex) {
+      frames.removeClass('active');
+      frames.eq(itemIndex).addClass('active')
+                          .trigger('shown');
+    });
+  }
+
+  function layoutPageByRows(page, fillPage) {
+
+    // row orientation
+    page.addClass('dashboard-row-orientation');
+
+    // find all the level2 sections (those are the rows)
+    var rows = page.find('div.section.level2');
+
+    // if there are no level2 sections then treat the
+    // entire page as if it's a level 2 section
+    if (rows.length === 0) {
+      page.wrapInner('<div class="section level2"></div>');
+      rows = page.find('div.section.level2');
+    }
+
+    rows.each(function () {
+
+      // flags
+      var haveNotes = false;
+      var haveFlexHeight = true;
+
+      // remove the h2
+      $(this).children('h2').remove();
+
+      // check for a tabset
+      var isTabset = $(this).hasClass('tabset');
+      if (isTabset)
+        layoutTabset($(this));
+
+      // give it row layout semantics if it's not a tabset
+      if (!isTabset)
+        $(this).addClass('dashboard-row');
+
+      // find all of the level 3 subheads
+      var columns = $(this).find('div.section.level3');
+
+      // determine figureSizes sizes
+      var figureSizes = chartFigureSizes(columns);
+
+      // fixup the columns
+      columns.each(function(index) {
+
+        // layout the chart (force flex if we are in a tabset)
+        var result = layoutChart($(this), isTabset);
+
+        // update flexHeight state
+        if (!result.flex)
+          haveFlexHeight = false;
+
+        // update state
+        if (result.notes)
+          haveNotes = true;
+
+        // set the column flex based on the figure width
+        // (value boxes will just get the default figure width)
+        var chartWidth = figureSizes[index].width;
+        setFlex($(this), chartWidth + ' ' + chartWidth + ' 0px');
+
+      });
+
+      // remove empty chart note divs
+      if (isTabset)
+        $(this).find('.chart-notes').filter(function() {
+            return $(this).html() === "&nbsp;";
+        }).remove();
+      if (!haveNotes)
+        $(this).find('.chart-notes').remove();
+
+       // make it a flexbox row
+      if (haveFlexHeight)
+        $(this).addClass('dashboard-row-flex');
+
+      // now we can set the height on all the wrappers (based on maximum
+      // figure height + room for title and notes, or data-height on the
+      // container if specified). However, don't do this if there is
+      // no flex on any of the constituent columns
+      var flexHeight = null;
+      var dataHeight = parseInt($(this).attr('data-height'));
+      if (dataHeight)
+        flexHeight = adjustedHeight(dataHeight, columns.first());
+      else if (haveFlexHeight)
+        flexHeight = maxChartHeight(figureSizes, columns);
+      if (flexHeight) {
+        if (fillPage)
+          setFlex($(this), flexHeight + ' ' + flexHeight + ' 0px');
+        else {
+          $(this).css('height', flexHeight + 'px');
+          setFlex($(this), '0 0 ' + flexHeight + 'px');
+        }
+      }
+
+    });
+  }
+
+  function layoutPageByColumns(page, fillPage) {
+
+    // column orientation
+    page.addClass('dashboard-column-orientation');
+
+    // find all the level2 sections (those are the columns)
+    var columns = page.find('div.section.level2');
+
+    // if there are no level2 sections then treat the
+    // entire page as if it's a level 2 section
+    if (columns.length === 0) {
+      page.wrapInner('<div class="section level2"></div>');
+      columns = page.find('div.section.level2');
+    }
+
+    // layout each column
+    columns.each(function (index) {
+
+      // remove the h2
+      $(this).children('h2').remove();
+
+      // make it a flexbox column
+      $(this).addClass('dashboard-column');
+
+      // check for a tabset
+      var isTabset = $(this).hasClass('tabset');
+      if (isTabset)
+        layoutTabset($(this));
+
+      // find all the h3 elements
+      var rows = $(this).find('div.section.level3');
+
+      // get the figure sizes for the rows
+      var figureSizes = chartFigureSizes(rows);
+
+      // column flex is the max row width (or data-width if specified)
+      var flexWidth;
+      var dataWidth = parseInt($(this).attr('data-width'));
+      if (dataWidth)
+        flexWidth = dataWidth;
+      else
+        flexWidth = maxChartWidth(figureSizes);
+      setFlex($(this), flexWidth + ' ' + flexWidth + ' 0px');
+
+      // layout each chart
+      rows.each(function(index) {
+
+        // perform the layout
+        var result = layoutChart($(this), false);
+
+        // ice the notes if there are none
+        if (!result.notes)
+          $(this).find('.chart-notes').remove();
+
+        // set flex height based on figHeight, then adjust
+        if (result.flex) {
+          var chartHeight = figureSizes[index].height;
+          chartHeight = adjustedHeight(chartHeight, $(this));
+          if (fillPage)
+            setFlex($(this), chartHeight + ' ' + chartHeight + ' 0px');
+          else {
+            $(this).css('height', chartHeight + 'px');
+            setFlex($(this), chartHeight + ' ' + chartHeight + ' ' + chartHeight + 'px');
+          }
+        }
+      });
+    });
+  }
+
+  function chartFigureSizes(charts) {
+
+    // sizes
+    var figureSizes = new Array(charts.length);
+
+    // check each chart
+    charts.each(function(index) {
+
+      // start with default
+      figureSizes[index] = {
+        width: _options.defaultFigWidth,
+        height: _options.defaultFigHeight
+      };
+
+      // look for data-height or data-width then knit options
+      var dataWidth = parseInt($(this).attr('data-width'));
+      var dataHeight = parseInt($(this).attr('data-height'));
+      var knitrOptions = $(this).find('.knitr-options:first');
+      var knitrWidth, knitrHeight;
+      if (knitrOptions) {
+        knitrWidth = parseInt(knitrOptions.attr('data-fig-width'));
+        knitrHeight =  parseInt(knitrOptions.attr('data-fig-height'));
+      }
+
+      // width
+      if (dataWidth)
+        figureSizes[index].width = dataWidth;
+      else if (knitrWidth)
+        figureSizes[index].width = knitrWidth;
+
+      // height
+      if (dataHeight)
+        figureSizes[index].height = dataHeight;
+      else if (knitrHeight)
+        figureSizes[index].height = knitrHeight;
+    });
+
+    // return sizes
+    return figureSizes;
+  }
+
+  function maxChartHeight(figureSizes, charts) {
+
+    // first compute the maximum height
+    var maxHeight = _options.defaultFigHeight;
+    for (var i = 0; i<figureSizes.length; i++)
+      if (figureSizes[i].height > maxHeight)
+        maxHeight = figureSizes[i].height;
+
+    // now add offests for chart title and chart notes
+    if (charts.length)
+      maxHeight = adjustedHeight(maxHeight, charts.first());
+
+    return maxHeight;
+  }
+
+  function adjustedHeight(height, chart) {
+    if (chart.length > 0) {
+      var chartTitle = chart.find('.chart-title');
+      if (chartTitle.length)
+        height += chartTitle.first().outerHeight();
+      var chartNotes = chart.find('.chart-notes');
+      if (chartNotes.length)
+        height += chartNotes.first().outerHeight();
+    }
+    return height;
+  }
+
+  function maxChartWidth(figureSizes) {
+    var maxWidth = _options.defaultFigWidth;
+    for (var i = 0; i<figureSizes.length; i++)
+      if (figureSizes[i].width > maxWidth)
+        maxWidth = figureSizes[i].width;
+    return maxWidth;
+  }
+
+  // layout a chart
+  function layoutChart(chart, forceFlex) {
+
+    // state to return
+    var result = {
+      notes: false,
+      flex: false
+    };
+
+    // extract the title
+    var title = extractTitle(chart);
+
+    // find components that apply to this container
+    var components = componentsFind(chart);
+
+    // if it's a custom component then call it and return
+    var customComponents = componentsCustom(components);
+    if (customComponents.length) {
+      componentsLayout(customComponents, title, chart);
+      result.notes = false;
+      result.flex = forceFlex || componentsFlex(customComponents);
+      return result;
+    }
+
+    // put all the content in a chart wrapper div
+    chart.addClass('chart-wrapper');
+    chart.wrapInner('<div class="chart-stage"></div>');
+    var chartContent = chart.children('.chart-stage');
+
+    // flex the content if appropriate
+    result.flex = forceFlex || componentsFlex(components);
+    if (result.flex) {
+      // add flex classes
+      chart.addClass('chart-wrapper-flex');
+      chartContent.addClass('chart-stage-flex');
+
+      // additional shim to break out of flexbox sizing
+      chartContent.wrapInner('<div class="chart-shim"></div>');
+      chartContent = chartContent.children('.chart-shim');
+    }
+
+    // set custom data-padding attribute
+    var pad = chart.attr('data-padding');
+    if (pad) {
+      if (pad === "0")
+        chart.addClass('no-padding');
+      else {
+        pad = pad + 'px';
+        chartContent.css('left', pad)
+                    .css('top', pad)
+                    .css('right', pad)
+                    .css('bottom', pad)
+      }
+    }
+
+    // call compoents
+    componentsLayout(components, title, chartContent);
+
+    // also activate components on shiny output
+    findShinyOutput(chartContent).on('shiny:value',
+      function(event) {
+        var element = $(event.target);
+        setTimeout(function() {
+
+          // see if we opted out of flex based on our output (for shiny
+          // we can't tell what type of output we have until after the
+          // value is bound)
+          var components = componentsFind(element);
+          var flex = forceFlex || componentsFlex(components);
+          if (!flex) {
+            chart.css('height', "");
+            setFlex(chart, "");
+            chart.removeClass('chart-wrapper-flex');
+            chartContent.removeClass('chart-stage-flex');
+            chartContent.children().unwrap();
+          }
+
+          // perform layout
+          componentsLayout(components, title, element.parent());
+        }, 10);
+      });
+
+    // add the title
+    var chartTitle = $('<div class="chart-title"></div>');
+    chartTitle.append(title);
+    chart.prepend(chartTitle);
+
+    // add the notes section
+    var chartNotes = $('<div class="chart-notes"></div>');
+    chartNotes.html('&nbsp;');
+    chart.append(chartNotes);
+
+    // attempt to extract notes if we have a component
+    if (components.length)
+      result.notes = extractChartNotes(chartContent, chartNotes);
+
+    // return result
+    return result;
+  }
+
+  // build a tabset from a section div with the .tabset class
+  function layoutTabset(tabset) {
+
+    // check for fade option
+    var fade = tabset.hasClass("tabset-fade");
+    var navClass = "nav-tabs";
+
+    // determine the heading level of the tabset and tabs
+    var match = tabset.attr('class').match(/level(\d) /);
+    if (match === null)
+      return;
+    var tabsetLevel = Number(match[1]);
+    var tabLevel = tabsetLevel + 1;
+
+    // find all subheadings immediately below
+    var tabs = tabset.find("div.section.level" + tabLevel);
+    if (!tabs.length)
+      return;
+
+    // create tablist and tab-content elements
+    var tabList = $('<ul class="nav ' + navClass + '" role="tablist"></ul>');
+    $(tabs[0]).before(tabList);
+    var tabContent = $('<div class="tab-content"></div>');
+    $(tabs[0]).before(tabContent);
+
+    // build the tabset
+    tabs.each(function(i) {
+
+      // get the tab div
+      var tab = $(tabs[i]);
+
+      // get the id then sanitize it for use with bootstrap tabs
+      var id = tab.attr('id');
+
+      // sanitize the id for use with bootstrap tabs
+      id = id.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_');
+      tab.attr('id', id);
+
+      // get the heading element within it and grab it's text
+      var heading = tab.find('h' + tabLevel + ':first');
+      var headingDom = heading.contents();
+
+      // build and append the tab list item
+      var a = $('<a role="tab" data-toggle="tab"></a>');
+      a.append(headingDom);
+      a.attr('href', '#' + id);
+      a.attr('aria-controls', id);
+      var li = $('<li role="presentation"></li>');
+      li.append(a);
+      if (i === 0)
+        li.attr('class', 'active');
+      tabList.append(li);
+
+      // set it's attributes
+      tab.attr('role', 'tabpanel');
+      tab.addClass('tab-pane');
+      tab.addClass('tabbed-pane');
+      tab.addClass('no-title');
+      if (fade)
+        tab.addClass('fade');
+      if (i === 0) {
+        tab.addClass('active');
+        if (fade)
+          tab.addClass('in');
+      }
+
+      // move it into the tab content div
+      tab.detach().appendTo(tabContent);
+    });
+
+    // add nav-tabs-custom
+    tabset.addClass('nav-tabs-custom');
+
+    // internal layout is dashboard-column with tab-content flexing
+    tabset.addClass('dashboard-column');
+    setFlex(tabContent, 1);
+  }
+
+  // one time global initialization for components
+  function componentsInit(dashboardContainer) {
+    for (var i=0; i<window.FlexDashboardComponents.length; i++) {
+      var component = window.FlexDashboardComponents[i];
+      if (component.init)
+        component.init(dashboardContainer);
+    }
+  }
+
+  // find components that apply within a container
+  function componentsFind(container) {
+
+    // look for components
+    var components = [];
+    for (var i=0; i<window.FlexDashboardComponents.length; i++) {
+      var component = window.FlexDashboardComponents[i];
+      if (component.find(container).length)
+        components.push(component);
+    }
+
+    // if there were none then use a special flowing content component
+    // that just adds a scrollbar in fillPage mode
+    if (components.length == 0) {
+      components.push({
+        find: function(container) {
+          return container;
+        },
+
+        flex: function(fillPage) {
+          return fillPage;
+        },
+
+        layout: function(title, container, element, fillPage) {
+          if (fillPage) {
+            container.addClass('flowing-content-shim');
+            container.addClass('flowing-content-container');
+          }
+        }
+      });
+    }
+
+    return components;
+  }
+
+  // if there is a custom component then pick it out
+  function componentsCustom(components) {
+    var customComponent = [];
+    for (var i=0; i<components.length; i++)
+      if (components[i].type === "custom") {
+        customComponent.push(components[i]);
+        break;
+      }
+    return customComponent;
+  }
+
+  // query all components for flex
+  function componentsFlex(components) {
+
+    // no components at all means no flex
+    if (components.length === 0)
+      return false;
+
+    // otherwise query components (assume true unless we see false)
+    var isMobile = isMobilePhone();
+    for (var i=0; i<components.length; i++)
+      if (components[i].flex && !components[i].flex(_options.fillPage))
+        return false;
+    return true;
+  }
+
+  // layout all components
+  function componentsLayout(components, title, container) {
+    var isMobile = isMobilePhone();
+    for (var i=0; i<components.length; i++) {
+      var element = components[i].find(container);
+      if (components[i].layout) {
+        // call layout (don't call other components if it returns false)
+        var result = components[i].layout(title, container, element, _options.fillPage);
+        if (result === false)
+          return;
+      }
+    }
+  }
+
+  // get a reference to the h3, discover it's inner html, and remove it
+  function extractTitle(container) {
+    var h3 = container.children('h3').first();
+    var title = '';
+    if (!container.hasClass('no-title'))
+      title = h3.contents();
+    h3.detach();
+    return title;
+  }
+
+  // extract chart notes
+  function extractChartNotes(chartContent, chartNotes) {
+    // look for a terminating blockquote or image caption
+    var blockquote = chartContent.children('blockquote:last-child');
+    var caption = chartContent.children('div.image-container')
+                              .children('p.caption');
+    if (blockquote.length) {
+      chartNotes.empty().append(blockquote.children('p:first-child').contents());
+      blockquote.remove();
+      return true;
+    } else if (caption.length) {
+      chartNotes.empty().append(caption.contents());
+      caption.remove();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function findShinyOutput(chartContent) {
+    return chartContent.find('.shiny-text-output, .shiny-html-output');
+  }
+
+  // safely detect rendering on a mobile phone
+  function isMobilePhone() {
+    try
+    {
+      return ! window.matchMedia("only screen and (min-width: 768px)").matches;
+    }
+    catch(e) {
+      return false;
+    }
+  }
+
+  function isFillPage() {
+    return _options.fillPage;
+  }
+
+  // detect portrait mode
+  function isPortrait() {
+    return ($(window).width() < $(window).height());
+  }
+
+  // safely detect rendering on a tablet
+  function isTablet() {
+    try
+    {
+      return window.matchMedia("only screen and (min-width: 769px) and (max-width: 992px)").matches;
+    }
+    catch(e) {
+      return false;
+    }
+  }
+
+  // test whether this is a shiny doc
+  function isShinyDoc() {
+    return (typeof(window.Shiny) !== "undefined" && !!window.Shiny.outputBindings);
+  }
+
+  // set flex using vendor specific prefixes
+  function setFlex(el, flex) {
+    el.css('-webkit-box-flex', flex)
+      .css('-webkit-flex', flex)
+      .css('-ms-flex', flex)
+      .css('flex', flex);
+  }
+
+  // support bookmarking of pages
+  function handleLocationHash() {
+
+    // restore tab/page from bookmark
+    var hash = window.decodeURIComponent(window.location.hash);
+    if (hash.length > 0)
+      $('ul.nav a[href="' + hash + '"]').tab('show');
+    FlexDashboardUtils.manageActiveNavbarMenu();
+
+    // navigate to a tab when the history changes
+    window.addEventListener("popstate", function(e) {
+      var hash = window.decodeURIComponent(window.location.hash);
+      var activeTab = $('ul.nav a[href="' + hash + '"]');
+      if (activeTab.length) {
+        activeTab.tab('show');
+      } else {
+        $('ul.nav a:first').tab('show');
+      }
+      FlexDashboardUtils.manageActiveNavbarMenu();
+    });
+
+    // add a hash to the URL when the user clicks on a tab/page
+    $('.navbar-nav a[data-toggle="tab"]').on('click', function(e) {
+      var baseUrl = FlexDashboardUtils.urlWithoutHash(window.location.href);
+      var hash = FlexDashboardUtils.urlHash($(this).attr('href'));
+      var href = baseUrl + hash;
+      FlexDashboardUtils.setLocation(href);
+    });
+
+    // handle clicks of other links that should activate pages
+    var navPages = $('ul.navbar-nav li a[data-toggle=tab]');
+    navPages.each(function() {
+      var href =  $(this).attr('href');
+      var links = $('a[href="' + href + '"][data-toggle!=tab]');
+      links.each(function() {
+        $(this).on('click', function(e) {
+          window.FlexDashboardUtils.showPage(href);
+        });
+      });
+    });
+  }
+
+  // tweak Prism highlighting
+  function initPrismHighlighting() {
+
+    if (window.Prism) {
+      Prism.languages.insertBefore('r', 'comment', {
+        'heading': [
+          {
+            // title 1
+        	  // =======
+
+        	  // title 2
+        	  // -------
+        	  pattern: /\w+.*(?:\r?\n|\r)(?:====+|----+)/,
+            alias: 'operator'
+          },
+          {
+            // ### title 3
+            pattern: /(^\s*)###[^#].+/m,
+            lookbehind: true,
+            alias: 'operator'
+          }
+        ]
+      });
+
+      // prism highlight
+      Prism.highlightAll();
+    }
+  }
+
+
+  // get theme color
+  var themeColors = {
+    bootstrap: {
+      primary: "rgba(51, 122, 183, 0.4)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    cerulean: {
+      primary: "rgb(47, 164, 231)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    journal: {
+      primary: "rgba(235, 104, 100, 0.70)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    flatly: {
+      primary: "rgba(44, 62, 80, 0.70)",
+      info: "rgba(52, 152, 219, 0.70)",
+      success: "rgba(24, 188, 156, 0.70)",
+      warning: "rgba(243, 156, 18, 0.70)",
+      danger: "rgba(231, 76, 60, 0.70)"
+    },
+    readable: {
+      primary: "rgba(69, 130, 236, 0.4)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    spacelab: {
+      primary: "rgba(68, 110, 155, 0.25)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    united: {
+      primary: "rgba(221, 72, 20, 0.30)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    cosmo: {
+      primary: "rgba(39, 128, 227, 0.7)",
+      info: "rgba(153, 84, 187, 0.7)",
+      success: "rgba(63, 182, 24, 0.7)",
+      warning: "rgba(255, 117, 24, 0.7)",
+      danger: "rgba(255, 0, 57, 0.7)"
+    },
+    lumen: {
+      primary: "rgba(21, 140, 186, 0.70)",
+      info: "rgba(117, 202, 235, 0.90)",
+      success: "rgba(40, 182, 44, 0.70)",
+      warning: "rgba(255, 133, 27, 0.70)",
+      danger: "rgba(255, 65, 54, 0.70)"
+    },
+    paper: {
+      primary: "rgba(33, 150, 243, 0.35)",
+      info: "rgb(225, 190, 231)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(255, 224, 178)",
+      danger: "rgb(249, 189, 187)"
+    },
+    sandstone: {
+      primary: "rgba(50, 93, 136, 0.3)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    simplex: {
+      primary: "rgba(217, 35, 15, 0.25)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    },
+    yeti: {
+      primary: "rgba(0, 140, 186, 0.298039)",
+      info: "rgb(217, 237, 247)",
+      success: "rgb(223, 240, 216)",
+      warning: "rgb(252, 248, 227)",
+      danger: "rgb(242, 222, 222)"
+    }
+  }
+  function themeColor(color) {
+    return themeColors[_options.theme][color];
+  }
+
+  FlexDashboard.prototype = {
+    constructor: FlexDashboard,
+    init: init,
+    isMobilePhone: isMobilePhone,
+    isFillPage: isFillPage,
+    themeColor: themeColor
+  };
+
+  return FlexDashboard;
+
+})();
+
+// utils
+window.FlexDashboardUtils = {
+  resizableImage: function(img) {
+    var src = img.attr('src');
+    var url = 'url("' + src + '")';
+    img.parent().css('background', url)
+                .css('background-size', 'contain')
+                .css('background-repeat', 'no-repeat')
+                .css('background-position', 'center')
+                .addClass('image-container');
+  },
+  setLocation: function(href) {
+    if (history && history.pushState) {
+      history.pushState(null, null, href);
+    } else {
+      window.location.replace(href);
+    }
+    setTimeout(function() {
+        window.scrollTo(0, 0);
+    }, 10);
+    this.manageActiveNavbarMenu();
+  },
+  showPage: function(href) {
+    $('ul.navbar-nav li a[href="' + href + '"]').tab('show');
+    var baseUrl = this.urlWithoutHash(window.location.href);
+    var loc = baseUrl + href;
+    this.setLocation(loc);
+  },
+  showLinkedValue: function(href) {
+    // check for a page link
+    if ($('ul.navbar-nav li a[data-toggle=tab][href="' + href + '"]').length > 0)
+      this.showPage(href);
+    else
+      window.open(href);
+  },
+  urlWithoutHash: function(url) {
+    var hashLoc = url.indexOf('#');
+    if (hashLoc != -1)
+      return url.substring(0, hashLoc);
+    else
+      return url;
+  },
+  urlHash: function(url) {
+    var hashLoc = url.indexOf('#');
+    if (hashLoc != -1)
+      return url.substring(hashLoc);
+    else
+      return "";
+  },
+  manageActiveNavbarMenu: function () {
+    // remove active from anyone currently active
+    $('.navbar ul.nav').find('li').removeClass('active');
+    // find the active tab
+    var activeTab = $('.dashboard-page-wrapper.tab-pane.active');
+    if (activeTab.length > 0) {
+      var tabId = activeTab.attr('id');
+      if (tabId)
+        $(".navbar ul.nav a[href='#" + tabId + "']").parents('li').addClass('active');
+    }
+  }
+};
+
+window.FlexDashboard = new FlexDashboard();
+
+// empty content
+window.FlexDashboardComponents.push({
+  find: function(container) {
+    if (container.find('p').length == 0)
+      return container;
+    else
+      return $();
+  }
+})
+
+// plot image
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.children('p')
+                    .children('img:only-child');
+  },
+
+  layout: function(title, container, element, fillPage) {
+    FlexDashboardUtils.resizableImage(element);
+  }
+});
+
+// plot image (figure style)
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.children('div.figure').children('img');
+  },
+
+  layout: function(title, container, element, fillPage) {
+    FlexDashboardUtils.resizableImage(element);
+  }
+});
+
+// htmlwidget
+window.FlexDashboardComponents.push({
+
+  init: function(dashboardContainer) {
+    // trigger "shown" after initial layout to force static htmlwidgets
+    // in runtime: shiny to be resized after the dom has been transformed
+    dashboardContainer.on('flexdashboard:layoutcomplete', function(event) {
+      setTimeout(function() {
+        dashboardContainer.trigger('shown');
+      }, 200);
+    });
+  },
+
+  find: function(container) {
+    return container.children('div[id^="htmlwidget-"],div.html-widget');
+  }
+});
+
+// gauge
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.children('div.html-widget.gauge');
+  },
+
+  flex: function(fillPage) {
+    return false;
+  },
+
+  layout: function(title, container, element, fillPage) {
+
+
+  }
+
+});
+
+// shiny output
+window.FlexDashboardComponents.push({
+  find: function(container) {
+    return container.children('div[class^="shiny-"]');
+  }
+});
+
+// datatables
+window.FlexDashboardComponents.push({
+  find: function(container) {
+    return container.find('.datatables');
+  },
+  flex: function(fillPage) {
+    return fillPage;
+  }
+});
+
+// bootstrap table
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    var bsTable = container.find('table.table');
+    if (bsTable.length !== 0)
+      return bsTable;
+    else
+      return container.find('tr.header').parent('thead').parent('table');
+  },
+
+  flex: function(fillPage) {
+    return fillPage;
+  },
+
+  layout: function(title, container, element, fillPage) {
+
+    // alias variables
+    var bsTable = element;
+
+    // fixup xtable generated tables with a proper thead
+    var headerRow = bsTable.find('tbody > tr:first-child > th').parent();
+    if (headerRow.length > 0) {
+      var thead = $('<thead></thead>');
+      bsTable.prepend(thead);
+      headerRow.detach().appendTo(thead);
+    }
+
+    // improve appearance
+    container.addClass('bootstrap-table');
+
+    // for fill page provide scrolling w/ sticky headers
+    if (fillPage) {
+      // force scrollbar on overflow
+      container.addClass('flowing-content-shim');
+
+      // stable table headers when scrolling
+      bsTable.stickyTableHeaders({
+        scrollableArea: container
+      });
+    }
+  }
+});
+
+// embedded shiny app
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.find('iframe.shiny-frame');
+  },
+
+  flex: function(fillPage) {
+    return fillPage;
+  },
+
+  layout: function(title, container, element, fillPage) {
+    if (fillPage) {
+      element.attr('height', '100%');
+    } else {
+      // provide default height if necessary
+      var height = element.get(0).style.height;
+      if (!height)
+        height = element.attr('height');
+      if (!height)
+        element.attr('height', 500);
+    }
+  }
+});
+
+// shiny fillRow or fillCol
+window.FlexDashboardComponents.push({
+
+  find: function(container) {
+    return container.find('.flexfill-container');
+  },
+
+  flex: function(fillPage) {
+    return fillPage;
+  },
+
+  layout: function(title, container, element, fillPage) {
+    if (fillPage)
+      element.css('height', '100%');
+    else {
+      // provide default height if necessary
+      var height = element.get(0).style.height;
+      if (height === "100%" || height === "auto" || height === "initial" ||
+          height === "inherit" || !height) {
+        element.css('height', 500);
+      }
+    }
+  }
+});
+
+// valueBox
+window.FlexDashboardComponents.push({
+
+  type: "custom",
+
+  find: function(container) {
+    if (container.find('span.value-output, .shiny-valuebox-output').length)
+      return container;
+    else
+      return $();
+  },
+
+  flex: function(fillPage) {
+    return false;
+  },
+
+  layout: function(title, container, element, fillPage) {
+
+    // alias variables
+    var chartTitle = title;
+    var valueBox = element;
+
+    // add value-box class to container
+    container.addClass('value-box');
+
+    // value paragraph
+    var value = $('<p class="value"></p>');
+
+    // if we have shiny-text-output then just move it in
+    var valueOutputSpan = [];
+    var shinyOutput = valueBox.find('.shiny-valuebox-output').detach();
+    if (shinyOutput.length) {
+      valueBox.children().remove();
+      shinyOutput.html("&mdash;");
+      value.append(shinyOutput);
+    } else {
+      // extract the value (remove leading vector index)
+      var chartValue = valueBox.text().trim();
+      chartValue = chartValue.replace("[1] ", "");
+      valueOutputSpan = valueBox.find('span.value-output').detach();
+      valueBox.children().remove();
+      value.text(chartValue);
+    }
+
+    // caption
+    var caption = $('<p class="caption"></p>');
+    caption.append(chartTitle);
+
+    // build inner div for value box and add it
+    var inner = $('<div class="inner"></div>');
+    inner.append(value);
+    inner.append(caption);
+    valueBox.append(inner);
+
+    // add icon if specified
+    var icon = $('<div class="icon"><i></i></div>');
+    valueBox.append(icon);
+    function setIcon(chartIcon) {
+      var iconLib = "";
+      var iconSplit = chartIcon.split(" ");
+      if (iconSplit.length > 1) {
+        iconLib = iconSplit[0];
+        chartIcon = iconSplit.slice(1).join(" ");
+      } else {
+        var components = chartIcon.split("-");
+        if (components.length > 1)
+          iconLib = components[0];
+      }
+      icon.children('i').attr('class', iconLib + ' ' + chartIcon);
+    }
+    var chartIcon = valueBox.attr('data-icon');
+    if (chartIcon)
+      setIcon(chartIcon);
+
+    // set color based on data-background if necessary
+    var dataBackground = valueBox.attr('data-background');
+    if (dataBackground)
+      valueBox.css('background-color', bgColor);
+    else {
+      // default to bg-primary if no other background is specified
+      if (!valueBox.hasClass('bg-primary') &&
+          !valueBox.hasClass('bg-info') &&
+          !valueBox.hasClass('bg-warning') &&
+          !valueBox.hasClass('bg-success') &&
+          !valueBox.hasClass('bg-danger')) {
+        valueBox.addClass('bg-primary');
+      }
+    }
+
+    // handle data attributes in valueOutputSpan
+    function handleValueOutput(valueOutput) {
+
+      // caption
+      var dataCaption = valueOutput.attr('data-caption');
+      if (dataCaption)
+        caption.html(dataCaption);
+
+      // icon
+      var dataIcon = valueOutput.attr('data-icon');
+      if (dataIcon)
+        setIcon(dataIcon);
+
+      // color
+      var dataColor = valueOutput.attr('data-color');
+      if (dataColor) {
+        if (dataColor.indexOf('bg-') === 0) {
+          valueBox.css('background-color', '');
+          if (!valueBox.hasClass(dataColor)) {
+             valueBox.removeClass('bg-primary bg-info bg-warning bg-danger bg-success');
+             valueBox.addClass(dataColor);
+          }
+        } else {
+          valueBox.removeClass('bg-primary bg-info bg-warning bg-danger bg-success');
+          valueBox.css('background-color', dataColor);
+        }
+      }
+
+      // url
+      var dataHref = valueOutput.attr('data-href');
+      if (dataHref) {
+        valueBox.addClass('linked-value');
+        valueBox.off('click.value-box');
+        valueBox.on('click.value-box', function(e) {
+          window.FlexDashboardUtils.showLinkedValue(dataHref);
+        });
+      }
+    }
+
+    // check for a valueOutputSpan
+    if (valueOutputSpan.length > 0) {
+      handleValueOutput(valueOutputSpan);
+    }
+
+    // if we have a shinyOutput then bind a listener to handle
+    // new valueOutputSpan values
+    shinyOutput.on('shiny:value',
+      function(event) {
+        var element = $(event.target);
+        setTimeout(function() {
+          var valueOutputSpan = element.find('span.value-output');
+          if (valueOutputSpan.length > 0)
+            handleValueOutput(valueOutputSpan);
+        }, 10);
+      }
+    );
+  }
+});
+</script>
+
+<div id="dashboard-container">
+
+<div id="column" class="section level2" data-width="650">
+<h2 data-width="650">Column</h2>
+<div id="chart-a" class="section level3">
+<h3>Chart A</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<div id="htmlwidget-312c1365e63d1079e55b" style="width:576px;height:460.8px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-312c1365e63d1079e55b">{"x":{"visdat":{"1bf566d2eb5a":["function () ","plotlyVisDat"]},"cur_data":"1bf566d2eb5a","attrs":{"1bf566d2eb5a":{"x":{},"y":{},"mode":"markers","text":{},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Annual Avg. Tmax vs Annual Avg. Tmin in 10 Locations in NY","xaxis":{"domain":[0,1],"automargin":true,"title":"Avg. Tmin"},"yaxis":{"domain":[0,1],"automargin":true,"title":"Avg. Tmax"},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[2.30958904109589,2.34712328767123,3.40547945205479,3.44508196721311,3.28958904109589,3.31369863013699,3.36904109589041,2.8155737704918,2.74547945205479,4.58684931506849,4.07698630136986,2.84726775956284,3.07698630136986,2.70027397260274,3.61205479452055,-0.992576419213974,3.17671232876712,5.17506849315069,4.10767123287671,3.25491803278689,4.20356164383562,4.57178082191781,3.40958904109589,3.79918032786885,4.29945205479452,5.15972602739726,3.8572602739726,4.20628415300546,3.75506849315068,5.02657534246575,3.39095890410959,3.1241095890411,3.98657534246575,3.71147540983607,3.32657534246575,3.77835616438356,3.89178082191781,2.69071038251366,2.44219178082192,4.32630136986301,4.33315068493151,2.78114754098361,2.62,2.89780821917808,3.42955801104972,2.83184357541899,2.45698630136986,5.07150684931507,3.6413698630137,2.87896174863388,3.95232876712329,3.86493150684932,2.69479452054795,3.23770491803279,3.74054794520548,4.64958904109589,3.9186301369863,3.51994535519126,3.3227397260274,4.51315068493151,4.60958904109589,3.87698630136986,4.51890410958904,4.33169398907104,4.31342465753425,4.69287671232877,5.48767123287671,4.49918032786885,3.49424657534247,5.65698630136986,5.64082191780822,3.94890710382514,4.11342465753425,4.38684931506849,4.36684931506849,3.59070422535211,3.98109589041096,6.21013698630137,5.02630136986301,4.22622950819672,5.70986301369863,5.26246575342466,3.91349862258953,4.46120218579235,4.93643835616438,6.27369863013699,5.03315068493151,4.6603825136612,4.21369863013699,5.48465753424658,8.85178082191781,8.53150684931507,9.48027397260274,9.17213114754098,8.46575342465753,8.24821917808219,8.30657534246575,7.96475409836066,7.89890410958904,9.21753424657534,9.31945205479452,7.83060109289617,8.38520547945205,8.21972602739726,8.86794520547945,7.79043715846995,7.99452054794521,9.45287671232877,8.69452054794521,7.72267759562842,8.68849315068493,8.85397260273973,7.75397260273973,8.19863387978142,8.4186301369863,9.1827397260274,8.41835616438356,8.55928961748634,8.30986301369863,9.29479452054795,8.88301369863014,8.39342465753425,9.00684931506849,8.82431693989071,9.07890410958904,8.82712328767123,8.96931506849315,8.74398907103825,8.6841095890411,10.2043835616438,10.372602739726,8.55901639344262,9.01041095890411,8.84383561643836,9.45808219178082,8.98879781420765,9.17534246575342,10.8342465753425,10.0591780821918,8.94863387978142,10.1630136986301,10.0649315068493,8.66602739726027,9.12896174863388,9.76575342465753,11.0068493150685,10.0356164383562,9.73415300546448,9.11890410958904,10.6958904109589,0.725549450549451,-0.920958083832335,1.36481994459834,0.981147540983607,0.642739726027397,0.793406593406593,1.29450549450549,0.478082191780822,-0.267857142857143,1.97651933701657,1.05552486187845,-0.279281767955801,0.00767123287671239,-0.198082191780822,0.704395604395604,0.761864406779661,-0.0972451790633608,2.51467065868263,1.28259668508287,0.403081232492997,1.81483516483516,1.46218487394958,0.385635359116022,0.249726775956284,1.16236263736264,2.43185595567867,0.427900552486188,0.700298507462687,0.441111111111111,2.12445054945055,4.9328729281768,4.72212643678161,5.00191780821918,4.97568306010929,4.3633431085044,4.74038461538461,5.06923076923077,4.80821917808219,4.19780821917808,5.9213698630137,5.91041095890411,4.26748633879781,4.4786301369863,4.70986301369863,5.03123287671233,4.4521978021978,4.55851648351648,6.36096096096096,5.91369863013699,4.81967213114754,6.06904109589041,5.95561643835616,4.73204419889503,4.93743169398907,5.51068493150685,6.35534246575342,5.34712328767123,5.28743169398907,4.93013698630137,6.15397260273973,4.1627397260274,3.30808383233533,4.31623188405797,4.45300546448087,4.25384615384615,4.61506849315068,5.17013698630137,4.24289617486339,3.45972602739726,5.35780821917808,5.47808219178082,3.75628415300546,3.91506849315068,2.88502994011976,4.72794520547945,4.18169398907104,4.06346153846154,6.25658682634731,5.74328767123288,4.9213698630137,6.02986301369863,5.81260273972603,4.01150684931507,4.39207650273224,5.18301369863014,6.26986301369863,4.85835616438356,4.73224043715847,4.59095890410959,6.45917808219178,3.81013698630137,3.77917808219178,4.56602739726027,4.31393442622951,3.69150684931507,3.76931506849315,4.29369863013699,3.32185792349727,3.18712328767123,5.03342465753425,4.91123287671233,3.26448087431694,3.27479452054795,3.64767123287671,4.3358904109589,3.2398891966759,3.03205479452055,5.52054794520548,4.52904109589041,3.96885245901639,4.96301369863014,5.21561643835616,3.41616438356164,3.86939890710383,4.36054794520548,6.16109589041096,4.68027397260274,4.45355191256831,3.46575342465753,5.05424657534247,3.92630136986301,2.82986301369863,3.12986301369863,2.83606557377049,3.76054794520548,3.79452054794521,4.09369863013699,3.28224043715847,2.66082191780822,4.78986301369863,4.66356164383562,3.08907103825137,2.97369863013699,2.83818681318681,3.57945205479452,3.47841530054645,3.48712328767123,5.55397260273973,4.27342465753425,3.33852459016393,4.82821917808219,5.11780821917808,3.35205479452055,3.62868852459016,4.22821917808219,5.24986301369863,3.8,3.86967213114754,3.55150684931507,5.14376731301939],"y":[14.0421917808219,14.113698630137,14.3830136986301,14.2814207650273,14.347397260274,14.4268493150685,14.7720547945205,14.5718579234973,14.2016438356164,15.9419178082192,15.9230136986301,13.75,14.341095890411,14.2315068493151,14.601095890411,9.02532751091703,13.6747945205479,15.5347945205479,15.253698630137,13.5125683060109,15.241095890411,15.0383561643836,13.62,13.9013661202186,14.8715068493151,15.4939726027397,14.467397260274,14.7013661202186,13.9230136986301,15.3128767123288,12.472602739726,13.1071232876712,13.5956164383562,13.1581967213115,13.0021917808219,12.7583561643836,13.2350684931507,12.6571038251366,11.7895890410959,13.7378082191781,14.3356164383562,11.7729508196721,12.0142465753425,12.4523287671233,13.1886740331492,11.7148044692737,11.8339726027397,14.0441095890411,13.4641095890411,11.8737704918033,13.1945205479452,13.1627397260274,11.6958904109589,12.0860655737705,13.2306849315068,13.3939726027397,13.2912328767123,12.8434426229508,12.4630136986301,13.5638356164384,13.2397260273973,13.4016438356164,13.9556164383562,13.4890710382514,13.6002739726027,13.553698630137,14.5791780821918,14.1909836065574,12.7005479452055,14.7690410958904,15.0964383561644,12.8915300546448,13.6728767123288,13.8649315068493,13.8843835616438,12.3129577464789,12.6605479452055,14.8687671232877,14.2972602739726,13.0210382513661,14.4619178082192,13.9690410958904,12.7134986225895,13.0661202185792,14.0052054794521,14.6901369863014,14.1419178082192,13.6655737704918,13.1147945205479,13.7758904109589,16.0934246575342,16.0317808219178,16.9213698630137,16.6592896174863,16.6928767123288,16.4756164383562,16.1701369863014,15.8346994535519,15.7213698630137,17.1605479452055,17.6956164383562,15.7169398907104,16.446301369863,16.4208219178082,16.6706849315068,15.3155737704918,16.393698630137,17.2917808219178,17.1594520547945,15.6456284153005,16.8972602739726,16.9690410958904,15.3854794520548,16.0341530054645,16.4956164383562,17.2939726027397,16.5065753424658,16.8516393442623,16.0594520547945,17.5827397260274,16.0638356164384,15.9241095890411,16.8030136986301,16.429781420765,16.9515068493151,16.8715068493151,16.8350684931507,16.6101092896175,16.3383561643836,18.1879452054795,18.4975342465753,16.4084699453552,17.1323287671233,17.4783561643836,17.3068493150685,16.201912568306,16.807397260274,17.9879452054795,17.7306849315069,16.3699453551913,17.687397260274,17.7290410958904,16.0230136986301,16.5726775956284,17.2156164383562,18.5172602739726,17.7597260273973,17.4177595628415,16.3772602739726,18.1128767123288,11.5623626373626,10.7170658682635,12.3277008310249,12.0789617486339,11.6808219178082,11.6241758241758,12.3436813186813,11.8556164383562,10.9291208791209,12.4944751381215,12.3436464088398,10.482044198895,11.2715068493151,11.2104109589041,11.9736263736264,11.2333333333333,11.0779614325069,13.2664670658683,12.9616022099448,10.9857142857143,12.8395604395604,12.3857142857143,11.3298342541436,11.4603825136612,12.3763736263736,12.7864265927978,12.1325966850829,11.7486567164179,11.4166666666667,12.5398351648352,13.6030386740331,13.6206896551724,13.9783561643836,13.9439890710383,13.4278592375367,14.0730769230769,14.4574175824176,14.4276712328767,13.9139726027397,15.5720547945205,15.413698630137,12.901912568306,13.9421917808219,13.9084931506849,14.1172602739726,13.2994505494505,14.0824175824176,15.8804804804805,15.8427397260274,14.2784153005464,15.7386301369863,15.8016438356164,14.2662983425414,14.5385245901639,15.2120547945205,15.8753424657534,15.0934246575342,14.8308743169399,14.2912328767123,15.78,12.8797260273973,12.7646706586826,13.1034782608696,13.3153005464481,13.3104395604396,13.198904109589,14.3547945205479,13.7199453551913,12.7345205479452,14.6613698630137,14.6482191780822,12.2707650273224,12.7657534246575,11.8407185628743,13.3002739726027,12.5122950819672,12.7239010989011,14.9059880239521,14.6276712328767,13.0684931506849,14.4728767123288,14.1750684931507,12.6002739726027,12.3827868852459,13.2495890410959,13.8027397260274,13.232602739726,13.0928961748634,12.8471232876712,13.9558904109589,13.6315068493151,14.0315068493151,14.1657534246575,13.8428961748634,13.8838356164384,13.6879452054795,14.4849315068493,14.3270491803279,13.3945205479452,15.0928767123288,15.0706849315068,12.8360655737705,13.4917808219178,14.2591780821918,14.4479452054795,12.9891966759003,13.3156164383562,15.3347945205479,14.6802739726027,13.5800546448087,14.8668493150685,15.0219178082192,13.2775342465753,13.1928961748634,14.1005479452055,15.5879452054795,14.6942465753425,14.4254098360656,13.3887671232877,14.3854794520548,14.5753424657534,13.9578082191781,13.7742465753425,13.2095628415301,14.0775342465753,14.0668493150685,14.9506849315068,14.5169398907104,13.6884931506849,15.5742465753425,15.6775342465753,13.2150273224044,13.6345205479452,13.6049450549451,14.4041095890411,13.3814207650273,13.54,15.5005479452055,15.2545205479452,13.5524590163934,15.2986301369863,15.4709589041096,13.6309589041096,13.7092896174863,14.8298630136986,15.1928767123288,14.3295890410959,14.1543715846995,13.8545205479452,15.0360110803324],"mode":"markers","text":["Location: Albany Airport<br />Year: 1981<br />Precipitation(mm): 773.6","Location: Albany Airport<br />Year: 1982<br />Precipitation(mm): 815.4","Location: Albany Airport<br />Year: 1983<br />Precipitation(mm): 1176.2","Location: Albany Airport<br />Year: 1984<br />Precipitation(mm): 943.7","Location: Albany Airport<br />Year: 1985<br />Precipitation(mm): 761.8","Location: Albany Airport<br />Year: 1986<br />Precipitation(mm): 1116.7","Location: Albany Airport<br />Year: 1987<br />Precipitation(mm): 998.4","Location: Albany Airport<br />Year: 1988<br />Precipitation(mm): 751.6","Location: Albany Airport<br />Year: 1989<br />Precipitation(mm): 1008.2","Location: Albany Airport<br />Year: 1990<br />Precipitation(mm): 1169.1","Location: Albany Airport<br />Year: 1991<br />Precipitation(mm): 907.5","Location: Albany Airport<br />Year: 1992<br />Precipitation(mm): 798.2","Location: Albany Airport<br />Year: 1993<br />Precipitation(mm): 1048.4","Location: Albany Airport<br />Year: 1994<br />Precipitation(mm): 883.5","Location: Albany Airport<br />Year: 1995<br />Precipitation(mm): 866","Location: Albany Airport<br />Year: 1996<br />Precipitation(mm): 635.3","Location: Albany Airport<br />Year: 1997<br />Precipitation(mm): 883","Location: Albany Airport<br />Year: 1998<br />Precipitation(mm): 990.2","Location: Albany Airport<br />Year: 1999<br />Precipitation(mm): 982.5","Location: Albany Airport<br />Year: 2000<br />Precipitation(mm): 1193","Location: Albany Airport<br />Year: 2001<br />Precipitation(mm): 726.8","Location: Albany Airport<br />Year: 2002<br />Precipitation(mm): 1051.2","Location: Albany Airport<br />Year: 2003<br />Precipitation(mm): 1177.2","Location: Albany Airport<br />Year: 2004<br />Precipitation(mm): 1017","Location: Albany Airport<br />Year: 2005<br />Precipitation(mm): 1213.1","Location: Albany Airport<br />Year: 2006<br />Precipitation(mm): 1184.2","Location: Albany Airport<br />Year: 2007<br />Precipitation(mm): 1149.8","Location: Albany Airport<br />Year: 2008<br />Precipitation(mm): 1214.2","Location: Albany Airport<br />Year: 2009<br />Precipitation(mm): 1047.8","Location: Albany Airport<br />Year: 2010<br />Precipitation(mm): 962","Location: Binghamton<br />Year: 1981<br />Precipitation(mm): 769.8","Location: Binghamton<br />Year: 1982<br />Precipitation(mm): 891.8","Location: Binghamton<br />Year: 1983<br />Precipitation(mm): 1081.8","Location: Binghamton<br />Year: 1984<br />Precipitation(mm): 1008.6","Location: Binghamton<br />Year: 1985<br />Precipitation(mm): 850.1","Location: Binghamton<br />Year: 1986<br />Precipitation(mm): 1130.2","Location: Binghamton<br />Year: 1987<br />Precipitation(mm): 879.5","Location: Binghamton<br />Year: 1988<br />Precipitation(mm): 853.3","Location: Binghamton<br />Year: 1989<br />Precipitation(mm): 985.2","Location: Binghamton<br />Year: 1990<br />Precipitation(mm): 1168.7","Location: Binghamton<br />Year: 1991<br />Precipitation(mm): 848.8","Location: Binghamton<br />Year: 1992<br />Precipitation(mm): 1043.1","Location: Binghamton<br />Year: 1993<br />Precipitation(mm): 1077.2","Location: Binghamton<br />Year: 1994<br />Precipitation(mm): 1070.5","Location: Binghamton<br />Year: 1995<br />Precipitation(mm): 839.4","Location: Binghamton<br />Year: 1996<br />Precipitation(mm): 1233.9","Location: Binghamton<br />Year: 1997<br />Precipitation(mm): 800.5","Location: Binghamton<br />Year: 1998<br />Precipitation(mm): 997.9","Location: Binghamton<br />Year: 1999<br />Precipitation(mm): 829.2","Location: Binghamton<br />Year: 2000<br />Precipitation(mm): 1135.9","Location: Binghamton<br />Year: 2001<br />Precipitation(mm): 871.4","Location: Binghamton<br />Year: 2002<br />Precipitation(mm): 1069.6","Location: Binghamton<br />Year: 2003<br />Precipitation(mm): 1105.2","Location: Binghamton<br />Year: 2004<br />Precipitation(mm): 1108","Location: Binghamton<br />Year: 2005<br />Precipitation(mm): 1053.1","Location: Binghamton<br />Year: 2006<br />Precipitation(mm): 1265.5","Location: Binghamton<br />Year: 2007<br />Precipitation(mm): 1036.2","Location: Binghamton<br />Year: 2008<br />Precipitation(mm): 1006.1","Location: Binghamton<br />Year: 2009<br />Precipitation(mm): 930.3","Location: Binghamton<br />Year: 2010<br />Precipitation(mm): 973.3","Location: Buffalo<br />Year: 1981<br />Precipitation(mm): 927.1","Location: Buffalo<br />Year: 1982<br />Precipitation(mm): 1045.4","Location: Buffalo<br />Year: 1983<br />Precipitation(mm): 1004.3","Location: Buffalo<br />Year: 1984<br />Precipitation(mm): 951","Location: Buffalo<br />Year: 1985<br />Precipitation(mm): 1168.8","Location: Buffalo<br />Year: 1986<br />Precipitation(mm): 1008.3","Location: Buffalo<br />Year: 1987<br />Precipitation(mm): 1072.4","Location: Buffalo<br />Year: 1988<br />Precipitation(mm): 981.5","Location: Buffalo<br />Year: 1989<br />Precipitation(mm): 1045.9","Location: Buffalo<br />Year: 1990<br />Precipitation(mm): 1292.9","Location: Buffalo<br />Year: 1991<br />Precipitation(mm): 1022.2","Location: Buffalo<br />Year: 1992<br />Precipitation(mm): 1209.3","Location: Buffalo<br />Year: 1993<br />Precipitation(mm): 1034","Location: Buffalo<br />Year: 1994<br />Precipitation(mm): 933.3","Location: Buffalo<br />Year: 1995<br />Precipitation(mm): 865","Location: Buffalo<br />Year: 1996<br />Precipitation(mm): 1141","Location: Buffalo<br />Year: 1997<br />Precipitation(mm): 1044.8","Location: Buffalo<br />Year: 1998<br />Precipitation(mm): 882","Location: Buffalo<br />Year: 1999<br />Precipitation(mm): 866.5","Location: Buffalo<br />Year: 2000<br />Precipitation(mm): 1073.4","Location: Buffalo<br />Year: 2001<br />Precipitation(mm): 894.5","Location: Buffalo<br />Year: 2002<br />Precipitation(mm): 1010.6","Location: Buffalo<br />Year: 2003<br />Precipitation(mm): 919.1","Location: Buffalo<br />Year: 2004<br />Precipitation(mm): 1061.1","Location: Buffalo<br />Year: 2005<br />Precipitation(mm): 992.9","Location: Buffalo<br />Year: 2006<br />Precipitation(mm): 1128.9","Location: Buffalo<br />Year: 2007<br />Precipitation(mm): 893.5","Location: Buffalo<br />Year: 2008<br />Precipitation(mm): 1202.6","Location: Buffalo<br />Year: 2009<br />Precipitation(mm): 1126.6","Location: Buffalo<br />Year: 2010<br />Precipitation(mm): 933.8","Location: JFK Airport<br />Year: 1981<br />Precipitation(mm): 879.1","Location: JFK Airport<br />Year: 1982<br />Precipitation(mm): 865.8","Location: JFK Airport<br />Year: 1983<br />Precipitation(mm): 1501.7","Location: JFK Airport<br />Year: 1984<br />Precipitation(mm): 1352","Location: JFK Airport<br />Year: 1985<br />Precipitation(mm): 838.8","Location: JFK Airport<br />Year: 1986<br />Precipitation(mm): 1028.9","Location: JFK Airport<br />Year: 1987<br />Precipitation(mm): 993.2","Location: JFK Airport<br />Year: 1988<br />Precipitation(mm): 1033.3","Location: JFK Airport<br />Year: 1989<br />Precipitation(mm): 1415.8","Location: JFK Airport<br />Year: 1990<br />Precipitation(mm): 1149.7","Location: JFK Airport<br />Year: 1991<br />Precipitation(mm): 983.8","Location: JFK Airport<br />Year: 1992<br />Precipitation(mm): 975.2","Location: JFK Airport<br />Year: 1993<br />Precipitation(mm): 905.5","Location: JFK Airport<br />Year: 1994<br />Precipitation(mm): 1101.6","Location: JFK Airport<br />Year: 1995<br />Precipitation(mm): 875.3","Location: JFK Airport<br />Year: 1996<br />Precipitation(mm): 1307.9","Location: JFK Airport<br />Year: 1997<br />Precipitation(mm): 1013","Location: JFK Airport<br />Year: 1998<br />Precipitation(mm): 954.6","Location: JFK Airport<br />Year: 1999<br />Precipitation(mm): 1019.4","Location: JFK Airport<br />Year: 2000<br />Precipitation(mm): 1042.8","Location: JFK Airport<br />Year: 2001<br />Precipitation(mm): 831.7","Location: JFK Airport<br />Year: 2002<br />Precipitation(mm): 1096.4","Location: JFK Airport<br />Year: 2003<br />Precipitation(mm): 1137.7","Location: JFK Airport<br />Year: 2004<br />Precipitation(mm): 1295.2","Location: JFK Airport<br />Year: 2005<br />Precipitation(mm): 1258.9","Location: JFK Airport<br />Year: 2006<br />Precipitation(mm): 1138.5","Location: JFK Airport<br />Year: 2007<br />Precipitation(mm): 1191.9","Location: JFK Airport<br />Year: 2008<br />Precipitation(mm): 1176.1","Location: JFK Airport<br />Year: 2009<br />Precipitation(mm): 1166.4","Location: JFK Airport<br />Year: 2010<br />Precipitation(mm): 1079.3","Location: Laguardia Airport<br />Year: 1981<br />Precipitation(mm): 869.1","Location: Laguardia Airport<br />Year: 1982<br />Precipitation(mm): 847.7","Location: Laguardia Airport<br />Year: 1983<br />Precipitation(mm): 1545","Location: Laguardia Airport<br />Year: 1984<br />Precipitation(mm): 1288.4","Location: Laguardia Airport<br />Year: 1985<br />Precipitation(mm): 931","Location: Laguardia Airport<br />Year: 1986<br />Precipitation(mm): 987.5","Location: Laguardia Airport<br />Year: 1987<br />Precipitation(mm): 1125.2","Location: Laguardia Airport<br />Year: 1988<br />Precipitation(mm): 1026.2","Location: Laguardia Airport<br />Year: 1989<br />Precipitation(mm): 1403.1","Location: Laguardia Airport<br />Year: 1990<br />Precipitation(mm): 1301.7","Location: Laguardia Airport<br />Year: 1991<br />Precipitation(mm): 969.4","Location: Laguardia Airport<br />Year: 1992<br />Precipitation(mm): 950.8","Location: Laguardia Airport<br />Year: 1993<br />Precipitation(mm): 1096.7","Location: Laguardia Airport<br />Year: 1994<br />Precipitation(mm): 1105.2","Location: Laguardia Airport<br />Year: 1995<br />Precipitation(mm): 897.1","Location: Laguardia Airport<br />Year: 1996<br />Precipitation(mm): 1248.3","Location: Laguardia Airport<br />Year: 1997<br />Precipitation(mm): 1153.3","Location: Laguardia Airport<br />Year: 1998<br />Precipitation(mm): 1148.9","Location: Laguardia Airport<br />Year: 1999<br />Precipitation(mm): 1043.9","Location: Laguardia Airport<br />Year: 2000<br />Precipitation(mm): 1079.9","Location: Laguardia Airport<br />Year: 2001<br />Precipitation(mm): 863.6","Location: Laguardia Airport<br />Year: 2002<br />Precipitation(mm): 1139.9","Location: Laguardia Airport<br />Year: 2003<br />Precipitation(mm): 1396.7","Location: Laguardia Airport<br />Year: 2004<br />Precipitation(mm): 1288.2","Location: Laguardia Airport<br />Year: 2005<br />Precipitation(mm): 1224.2","Location: Laguardia Airport<br />Year: 2006<br />Precipitation(mm): 1371.1","Location: Laguardia Airport<br />Year: 2007<br />Precipitation(mm): 1357.7","Location: Laguardia Airport<br />Year: 2008<br />Precipitation(mm): 1216.4","Location: Laguardia Airport<br />Year: 2009<br />Precipitation(mm): 1178.1","Location: Laguardia Airport<br />Year: 2010<br />Precipitation(mm): 1032.4","Location: Lowville<br />Year: 1981<br />Precipitation(mm): 953.1","Location: Lowville<br />Year: 1982<br />Precipitation(mm): 852.9","Location: Lowville<br />Year: 1983<br />Precipitation(mm): 1117.3","Location: Lowville<br />Year: 1984<br />Precipitation(mm): 941.5","Location: Lowville<br />Year: 1985<br />Precipitation(mm): 988.2","Location: Lowville<br />Year: 1986<br />Precipitation(mm): 951.5","Location: Lowville<br />Year: 1987<br />Precipitation(mm): 875.9","Location: Lowville<br />Year: 1988<br />Precipitation(mm): 908.7","Location: Lowville<br />Year: 1989<br />Precipitation(mm): 1093.6","Location: Lowville<br />Year: 1990<br />Precipitation(mm): 1230.6","Location: Lowville<br />Year: 1991<br />Precipitation(mm): 989.3","Location: Lowville<br />Year: 1992<br />Precipitation(mm): 1077.4","Location: Lowville<br />Year: 1993<br />Precipitation(mm): 1001.8","Location: Lowville<br />Year: 1994<br />Precipitation(mm): 1025.4","Location: Lowville<br />Year: 1995<br />Precipitation(mm): 886.1","Location: Lowville<br />Year: 1996<br />Precipitation(mm): 1129","Location: Lowville<br />Year: 1997<br />Precipitation(mm): 980.9","Location: Lowville<br />Year: 1998<br />Precipitation(mm): 942.1","Location: Lowville<br />Year: 1999<br />Precipitation(mm): 959.8","Location: Lowville<br />Year: 2000<br />Precipitation(mm): 1127.4","Location: Lowville<br />Year: 2001<br />Precipitation(mm): 980.7","Location: Lowville<br />Year: 2002<br />Precipitation(mm): 1059","Location: Lowville<br />Year: 2003<br />Precipitation(mm): 1163.5","Location: Lowville<br />Year: 2004<br />Precipitation(mm): 1028.8","Location: Lowville<br />Year: 2005<br />Precipitation(mm): 1324.9","Location: Lowville<br />Year: 2006<br />Precipitation(mm): 1144.2","Location: Lowville<br />Year: 2007<br />Precipitation(mm): 1055.3","Location: Lowville<br />Year: 2008<br />Precipitation(mm): 1226","Location: Lowville<br />Year: 2009<br />Precipitation(mm): 994","Location: Lowville<br />Year: 2010<br />Precipitation(mm): 1067.1","Location: Mohonk Lake<br />Year: 1981<br />Precipitation(mm): 992.8","Location: Mohonk Lake<br />Year: 1982<br />Precipitation(mm): 1091","Location: Mohonk Lake<br />Year: 1983<br />Precipitation(mm): 1585.9","Location: Mohonk Lake<br />Year: 1984<br />Precipitation(mm): 1248","Location: Mohonk Lake<br />Year: 1985<br />Precipitation(mm): 1114","Location: Mohonk Lake<br />Year: 1986<br />Precipitation(mm): 1251","Location: Mohonk Lake<br />Year: 1987<br />Precipitation(mm): 1313.3","Location: Mohonk Lake<br />Year: 1988<br />Precipitation(mm): 1062.6","Location: Mohonk Lake<br />Year: 1989<br />Precipitation(mm): 1465.1","Location: Mohonk Lake<br />Year: 1990<br />Precipitation(mm): 1595.8","Location: Mohonk Lake<br />Year: 1991<br />Precipitation(mm): 1113.8","Location: Mohonk Lake<br />Year: 1992<br />Precipitation(mm): 1261","Location: Mohonk Lake<br />Year: 1993<br />Precipitation(mm): 1226","Location: Mohonk Lake<br />Year: 1994<br />Precipitation(mm): 1264","Location: Mohonk Lake<br />Year: 1995<br />Precipitation(mm): 1253.6","Location: Mohonk Lake<br />Year: 1996<br />Precipitation(mm): 1747.4","Location: Mohonk Lake<br />Year: 1997<br />Precipitation(mm): 1190.2","Location: Mohonk Lake<br />Year: 1998<br />Precipitation(mm): 1098.2","Location: Mohonk Lake<br />Year: 1999<br />Precipitation(mm): 1215.6","Location: Mohonk Lake<br />Year: 2000<br />Precipitation(mm): 1408.7","Location: Mohonk Lake<br />Year: 2001<br />Precipitation(mm): 916.5","Location: Mohonk Lake<br />Year: 2002<br />Precipitation(mm): 1318.3","Location: Mohonk Lake<br />Year: 2003<br />Precipitation(mm): 1589.3","Location: Mohonk Lake<br />Year: 2004<br />Precipitation(mm): 1276.2","Location: Mohonk Lake<br />Year: 2005<br />Precipitation(mm): 1607.2","Location: Mohonk Lake<br />Year: 2006<br />Precipitation(mm): 1452.3","Location: Mohonk Lake<br />Year: 2007<br />Precipitation(mm): 1300.4","Location: Mohonk Lake<br />Year: 2008<br />Precipitation(mm): 1527.7","Location: Mohonk Lake<br />Year: 2009<br />Precipitation(mm): 1550.1","Location: Mohonk Lake<br />Year: 2010<br />Precipitation(mm): 1233.6","Location: Oswego<br />Year: 1981<br />Precipitation(mm): 1016.2","Location: Oswego<br />Year: 1982<br />Precipitation(mm): 815.1","Location: Oswego<br />Year: 1983<br />Precipitation(mm): 966.4","Location: Oswego<br />Year: 1984<br />Precipitation(mm): 1045.3","Location: Oswego<br />Year: 1985<br />Precipitation(mm): 1009.1","Location: Oswego<br />Year: 1986<br />Precipitation(mm): 1073.2","Location: Oswego<br />Year: 1987<br />Precipitation(mm): 921.9","Location: Oswego<br />Year: 1988<br />Precipitation(mm): 1044.3","Location: Oswego<br />Year: 1989<br />Precipitation(mm): 1021.3","Location: Oswego<br />Year: 1990<br />Precipitation(mm): 1266","Location: Oswego<br />Year: 1991<br />Precipitation(mm): 1115.7","Location: Oswego<br />Year: 1992<br />Precipitation(mm): 1389.6","Location: Oswego<br />Year: 1993<br />Precipitation(mm): 1022.9","Location: Oswego<br />Year: 1994<br />Precipitation(mm): 899.2","Location: Oswego<br />Year: 1995<br />Precipitation(mm): 1043.4","Location: Oswego<br />Year: 1996<br />Precipitation(mm): 1276.1","Location: Oswego<br />Year: 1997<br />Precipitation(mm): 1029.9","Location: Oswego<br />Year: 1998<br />Precipitation(mm): 922.6","Location: Oswego<br />Year: 1999<br />Precipitation(mm): 969.1","Location: Oswego<br />Year: 2000<br />Precipitation(mm): 1105.2","Location: Oswego<br />Year: 2001<br />Precipitation(mm): 844.8","Location: Oswego<br />Year: 2002<br />Precipitation(mm): 1081.8","Location: Oswego<br />Year: 2003<br />Precipitation(mm): 1167.7","Location: Oswego<br />Year: 2004<br />Precipitation(mm): 1079.9","Location: Oswego<br />Year: 2005<br />Precipitation(mm): 1129.8","Location: Oswego<br />Year: 2006<br />Precipitation(mm): 1126.3","Location: Oswego<br />Year: 2007<br />Precipitation(mm): 1038.9","Location: Oswego<br />Year: 2008<br />Precipitation(mm): 1423.1","Location: Oswego<br />Year: 2009<br />Precipitation(mm): 965.3","Location: Oswego<br />Year: 2010<br />Precipitation(mm): 1229.4","Location: Rochester<br />Year: 1981<br />Precipitation(mm): 889.9","Location: Rochester<br />Year: 1982<br />Precipitation(mm): 809.7","Location: Rochester<br />Year: 1983<br />Precipitation(mm): 894.8","Location: Rochester<br />Year: 1984<br />Precipitation(mm): 855.5","Location: Rochester<br />Year: 1985<br />Precipitation(mm): 763.8","Location: Rochester<br />Year: 1986<br />Precipitation(mm): 922.7","Location: Rochester<br />Year: 1987<br />Precipitation(mm): 867.1","Location: Rochester<br />Year: 1988<br />Precipitation(mm): 627","Location: Rochester<br />Year: 1989<br />Precipitation(mm): 830.3","Location: Rochester<br />Year: 1990<br />Precipitation(mm): 1019.6","Location: Rochester<br />Year: 1991<br />Precipitation(mm): 743.9","Location: Rochester<br />Year: 1992<br />Precipitation(mm): 922.4","Location: Rochester<br />Year: 1993<br />Precipitation(mm): 741","Location: Rochester<br />Year: 1994<br />Precipitation(mm): 751.6","Location: Rochester<br />Year: 1995<br />Precipitation(mm): 763.2","Location: Rochester<br />Year: 1996<br />Precipitation(mm): 1135.6","Location: Rochester<br />Year: 1997<br />Precipitation(mm): 882.1","Location: Rochester<br />Year: 1998<br />Precipitation(mm): 1066.9","Location: Rochester<br />Year: 1999<br />Precipitation(mm): 842.9","Location: Rochester<br />Year: 2000<br />Precipitation(mm): 961.5","Location: Rochester<br />Year: 2001<br />Precipitation(mm): 741.8","Location: Rochester<br />Year: 2002<br />Precipitation(mm): 874.3","Location: Rochester<br />Year: 2003<br />Precipitation(mm): 806.3","Location: Rochester<br />Year: 2004<br />Precipitation(mm): 961.8","Location: Rochester<br />Year: 2005<br />Precipitation(mm): 901.6","Location: Rochester<br />Year: 2006<br />Precipitation(mm): 1044","Location: Rochester<br />Year: 2007<br />Precipitation(mm): 825.3","Location: Rochester<br />Year: 2008<br />Precipitation(mm): 844.5","Location: Rochester<br />Year: 2009<br />Precipitation(mm): 853.5","Location: Rochester<br />Year: 2010<br />Precipitation(mm): 952.4","Location: Syracuse Hancock Airport<br />Year: 1981<br />Precipitation(mm): 894.7","Location: Syracuse Hancock Airport<br />Year: 1982<br />Precipitation(mm): 893.7","Location: Syracuse Hancock Airport<br />Year: 1983<br />Precipitation(mm): 923.2","Location: Syracuse Hancock Airport<br />Year: 1984<br />Precipitation(mm): 965.9","Location: Syracuse Hancock Airport<br />Year: 1985<br />Precipitation(mm): 826","Location: Syracuse Hancock Airport<br />Year: 1986<br />Precipitation(mm): 1091.7","Location: Syracuse Hancock Airport<br />Year: 1987<br />Precipitation(mm): 856.9","Location: Syracuse Hancock Airport<br />Year: 1988<br />Precipitation(mm): 875.5","Location: Syracuse Hancock Airport<br />Year: 1989<br />Precipitation(mm): 939.4","Location: Syracuse Hancock Airport<br />Year: 1990<br />Precipitation(mm): 1257.5","Location: Syracuse Hancock Airport<br />Year: 1991<br />Precipitation(mm): 941.9","Location: Syracuse Hancock Airport<br />Year: 1992<br />Precipitation(mm): 1109.2","Location: Syracuse Hancock Airport<br />Year: 1993<br />Precipitation(mm): 1102.7","Location: Syracuse Hancock Airport<br />Year: 1994<br />Precipitation(mm): 932","Location: Syracuse Hancock Airport<br />Year: 1995<br />Precipitation(mm): 797.6","Location: Syracuse Hancock Airport<br />Year: 1996<br />Precipitation(mm): 1001.5","Location: Syracuse Hancock Airport<br />Year: 1997<br />Precipitation(mm): 829.6","Location: Syracuse Hancock Airport<br />Year: 1998<br />Precipitation(mm): 942.5","Location: Syracuse Hancock Airport<br />Year: 1999<br />Precipitation(mm): 785.6","Location: Syracuse Hancock Airport<br />Year: 2000<br />Precipitation(mm): 940.4","Location: Syracuse Hancock Airport<br />Year: 2001<br />Precipitation(mm): 872.1","Location: Syracuse Hancock Airport<br />Year: 2002<br />Precipitation(mm): 1024.5","Location: Syracuse Hancock Airport<br />Year: 2003<br />Precipitation(mm): 956","Location: Syracuse Hancock Airport<br />Year: 2004<br />Precipitation(mm): 1096.7","Location: Syracuse Hancock Airport<br />Year: 2005<br />Precipitation(mm): 1019.7","Location: Syracuse Hancock Airport<br />Year: 2006<br />Precipitation(mm): 1199.6","Location: Syracuse Hancock Airport<br />Year: 2007<br />Precipitation(mm): 1057.4","Location: Syracuse Hancock Airport<br />Year: 2008<br />Precipitation(mm): 1064.8","Location: Syracuse Hancock Airport<br />Year: 2009<br />Precipitation(mm): 899.3","Location: Syracuse Hancock Airport<br />Year: 2010<br />Precipitation(mm): 1054.4"],"type":"scatter","marker":{"colorbar":{"title":"prcp_total","ticklen":2},"cmin":627,"cmax":1747.4,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[773.6,815.4,1176.2,943.7,761.8,1116.7,998.4,751.6,1008.2,1169.1,907.5,798.2,1048.4,883.5,866,635.3,883,990.2,982.5,1193,726.8,1051.2,1177.2,1017,1213.1,1184.2,1149.8,1214.2,1047.8,962,769.8,891.8,1081.8,1008.6,850.1,1130.2,879.5,853.3,985.2,1168.7,848.8,1043.1,1077.2,1070.5,839.4,1233.9,800.5,997.9,829.2,1135.9,871.4,1069.6,1105.2,1108,1053.1,1265.5,1036.2,1006.1,930.3,973.3,927.1,1045.4,1004.3,951,1168.8,1008.3,1072.4,981.5,1045.9,1292.9,1022.2,1209.3,1034,933.3,865,1141,1044.8,882,866.5,1073.4,894.5,1010.6,919.1,1061.1,992.9,1128.9,893.5,1202.6,1126.6,933.8,879.1,865.8,1501.7,1352,838.8,1028.9,993.2,1033.3,1415.8,1149.7,983.8,975.2,905.5,1101.6,875.3,1307.9,1013,954.6,1019.4,1042.8,831.7,1096.4,1137.7,1295.2,1258.9,1138.5,1191.9,1176.1,1166.4,1079.3,869.1,847.7,1545,1288.4,931,987.5,1125.2,1026.2,1403.1,1301.7,969.4,950.8,1096.7,1105.2,897.1,1248.3,1153.3,1148.9,1043.9,1079.9,863.6,1139.9,1396.7,1288.2,1224.2,1371.1,1357.7,1216.4,1178.1,1032.4,953.1,852.9,1117.3,941.5,988.2,951.5,875.9,908.7,1093.6,1230.6,989.3,1077.4,1001.8,1025.4,886.1,1129,980.9,942.1,959.8,1127.4,980.7,1059,1163.5,1028.8,1324.9,1144.2,1055.3,1226,994,1067.1,992.8,1091,1585.9,1248,1114,1251,1313.3,1062.6,1465.1,1595.8,1113.8,1261,1226,1264,1253.6,1747.4,1190.2,1098.2,1215.6,1408.7,916.5,1318.3,1589.3,1276.2,1607.2,1452.3,1300.4,1527.7,1550.1,1233.6,1016.2,815.1,966.4,1045.3,1009.1,1073.2,921.9,1044.3,1021.3,1266,1115.7,1389.6,1022.9,899.2,1043.4,1276.1,1029.9,922.6,969.1,1105.2,844.8,1081.8,1167.7,1079.9,1129.8,1126.3,1038.9,1423.1,965.3,1229.4,889.9,809.7,894.8,855.5,763.8,922.7,867.1,627,830.3,1019.6,743.9,922.4,741,751.6,763.2,1135.6,882.1,1066.9,842.9,961.5,741.8,874.3,806.3,961.8,901.6,1044,825.3,844.5,853.5,952.4,894.7,893.7,923.2,965.9,826,1091.7,856.9,875.5,939.4,1257.5,941.9,1109.2,1102.7,932,797.6,1001.5,829.6,942.5,785.6,940.4,872.1,1024.5,956,1096.7,1019.7,1199.6,1057.4,1064.8,899.3,1054.4],"line":{"colorbar":{"title":"","ticklen":2},"cmin":627,"cmax":1747.4,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[773.6,815.4,1176.2,943.7,761.8,1116.7,998.4,751.6,1008.2,1169.1,907.5,798.2,1048.4,883.5,866,635.3,883,990.2,982.5,1193,726.8,1051.2,1177.2,1017,1213.1,1184.2,1149.8,1214.2,1047.8,962,769.8,891.8,1081.8,1008.6,850.1,1130.2,879.5,853.3,985.2,1168.7,848.8,1043.1,1077.2,1070.5,839.4,1233.9,800.5,997.9,829.2,1135.9,871.4,1069.6,1105.2,1108,1053.1,1265.5,1036.2,1006.1,930.3,973.3,927.1,1045.4,1004.3,951,1168.8,1008.3,1072.4,981.5,1045.9,1292.9,1022.2,1209.3,1034,933.3,865,1141,1044.8,882,866.5,1073.4,894.5,1010.6,919.1,1061.1,992.9,1128.9,893.5,1202.6,1126.6,933.8,879.1,865.8,1501.7,1352,838.8,1028.9,993.2,1033.3,1415.8,1149.7,983.8,975.2,905.5,1101.6,875.3,1307.9,1013,954.6,1019.4,1042.8,831.7,1096.4,1137.7,1295.2,1258.9,1138.5,1191.9,1176.1,1166.4,1079.3,869.1,847.7,1545,1288.4,931,987.5,1125.2,1026.2,1403.1,1301.7,969.4,950.8,1096.7,1105.2,897.1,1248.3,1153.3,1148.9,1043.9,1079.9,863.6,1139.9,1396.7,1288.2,1224.2,1371.1,1357.7,1216.4,1178.1,1032.4,953.1,852.9,1117.3,941.5,988.2,951.5,875.9,908.7,1093.6,1230.6,989.3,1077.4,1001.8,1025.4,886.1,1129,980.9,942.1,959.8,1127.4,980.7,1059,1163.5,1028.8,1324.9,1144.2,1055.3,1226,994,1067.1,992.8,1091,1585.9,1248,1114,1251,1313.3,1062.6,1465.1,1595.8,1113.8,1261,1226,1264,1253.6,1747.4,1190.2,1098.2,1215.6,1408.7,916.5,1318.3,1589.3,1276.2,1607.2,1452.3,1300.4,1527.7,1550.1,1233.6,1016.2,815.1,966.4,1045.3,1009.1,1073.2,921.9,1044.3,1021.3,1266,1115.7,1389.6,1022.9,899.2,1043.4,1276.1,1029.9,922.6,969.1,1105.2,844.8,1081.8,1167.7,1079.9,1129.8,1126.3,1038.9,1423.1,965.3,1229.4,889.9,809.7,894.8,855.5,763.8,922.7,867.1,627,830.3,1019.6,743.9,922.4,741,751.6,763.2,1135.6,882.1,1066.9,842.9,961.5,741.8,874.3,806.3,961.8,901.6,1044,825.3,844.5,853.5,952.4,894.7,893.7,923.2,965.9,826,1091.7,856.9,875.5,939.4,1257.5,941.9,1109.2,1102.7,932,797.6,1001.5,829.6,942.5,785.6,940.4,872.1,1024.5,956,1096.7,1019.7,1199.6,1057.4,1064.8,899.3,1054.4]}},"xaxis":"x","yaxis":"y","frame":null},{"x":[-0.992576419213974,11.0068493150685],"y":[9.02532751091703,18.5172602739726],"type":"scatter","mode":"markers","opacity":0,"hoverinfo":"none","showlegend":false,"marker":{"colorbar":{"title":"prcp_total","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"cmin":627,"cmax":1747.4,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"color":[627,1747.4],"line":{"color":"rgba(255,127,14,1)"}},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div id="column-1" class="section level2" data-width="350">
+<h2 data-width="350">Column</h2>
+<div id="chart-b" class="section level3">
+<h3>Chart B</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<div id="htmlwidget-ed1fa21cadc465107e70" style="width:576px;height:460.8px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ed1fa21cadc465107e70">{"x":{"visdat":{"1bf5a46920":["function () ","plotlyVisDat"]},"cur_data":"1bf5a46920","attrs":{"1bf5a46920":{"y":{},"color":{},"colors":"viridis","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"box"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"yaxis":{"domain":[0,1],"automargin":true,"title":"snow_total"},"xaxis":{"domain":[0,1],"automargin":true},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"fillcolor":"rgba(68,1,84,0.5)","y":[1345,1800,2090,1673,1292,1725,1935,1536,536,1449,867,811,2179,2245,1396,1798,1984,731,1082,2122,1574,2171,2252,1210,1919,505,1964,1464,962,1149],"type":"box","name":"Albany Airport","marker":{"color":"rgba(68,1,84,1)","line":{"color":"rgba(68,1,84,1)"}},"line":{"color":"rgba(68,1,84,1)"},"xaxis":"x","yaxis":"y","frame":null},{"fillcolor":"rgba(72,40,120,0.5)","y":[1491,1831,2077,1793,1692,1947,2062,1811,1592,1737,1558,1655,3505,2580,2655,2567,2683,1355,2028,2607,2341,2422,2961,2022,3126,1238,2709,1899,1613,2258],"type":"box","name":"Binghamton","marker":{"color":"rgba(72,40,120,1)","line":{"color":"rgba(72,40,120,1)"}},"line":{"color":"rgba(72,40,120,1)"},"xaxis":"x","yaxis":"y","frame":null},{"fillcolor":"rgba(62,74,137,0.5)","y":[1507,2914,2374,1919,4274,1520,1521,1472,2498,1709,2065,2141,2492,2182,3629,2419,2597,1340,2600,3712,3706,2392,2347,2496,3165,1837,2329,3167,1778,2103],"type":"box","name":"Buffalo","marker":{"color":"rgba(62,74,137,1)","line":{"color":"rgba(62,74,137,1)"}},"line":{"color":"rgba(62,74,137,1)"},"xaxis":"x","yaxis":"y","frame":null},{"fillcolor":"rgba(49,104,142,0.5)","y":[450,678,725,668,625,456,640,432,307,284,387,265,692,946,535,1421,266,135,258,658,557,410,1574,584,998,518,278,361,855,1192],"type":"box","name":"JFK Airport","marker":{"color":"rgba(49,104,142,1)","line":{"color":"rgba(49,104,142,1)"}},"line":{"color":"rgba(49,104,142,1)"},"xaxis":"x","yaxis":"y","frame":null},{"fillcolor":"rgba(38,130,142,0.5)","y":[450,797,755,712,477,434,696,439,490,493,410,338,1057,1223,825,1472,327,188,320,774,677,432,1408,730,1145,765,442,444,749,1139],"type":"box","name":"Laguardia Airport","marker":{"color":"rgba(38,130,142,1)","line":{"color":"rgba(38,130,142,1)"}},"line":{"color":"rgba(38,130,142,1)"},"xaxis":"x","yaxis":"y","frame":null},{"fillcolor":"rgba(31,158,137,0.5)","y":[1746,2706,2407,2265,3811,2249,2573,2686,4073,2731,2631,1619,3918,3642,3799,3270,5135,1677,2888,2977,3822,3524,3345,2575,3368,2437,3915,5215,3248,1434],"type":"box","name":"Lowville","marker":{"color":"rgba(31,158,137,1)","line":{"color":"rgba(31,158,137,1)"}},"line":{"color":"rgba(31,158,137,1)"},"xaxis":"x","yaxis":"y","frame":null},{"fillcolor":"rgba(53,183,121,0.5)","y":[1229,1782,2084,1928,1332,1819,1701,1463,817,1329,924,1233,1822,1990,1799,2727,1797,671,911,1837,1911,1591,2106,1278,2313,829,1611,1464,1209,2025],"type":"box","name":"Mohonk Lake","marker":{"color":"rgba(53,183,121,1)","line":{"color":"rgba(53,183,121,1)"}},"line":{"color":"rgba(53,183,121,1)"},"xaxis":"x","yaxis":"y","frame":null},{"fillcolor":"rgba(109,205,89,0.5)","y":[2737,3639,2592,3278,5118,2963,2354,4358,3694,2371,3114,3980,4498,4443,4635,4599,4415,1513,2991,4003,2950,2676,4699,4414,4112,1727,4572,5050,2788,3211],"type":"box","name":"Oswego","marker":{"color":"rgba(109,205,89,1)","line":{"color":"rgba(109,205,89,1)"}},"line":{"color":"rgba(109,205,89,1)"},"xaxis":"x","yaxis":"y","frame":null},{"fillcolor":"rgba(180,222,44,0.5)","y":[2618,2401,2099,2390,2536,1569,1894,1440,2929,2265,2118,2845,3029,2805,2281,3186,2896,1573,3183,3379,2380,2770,2795,2843,3098,1332,3700,3045,1825,2844],"type":"box","name":"Rochester","marker":{"color":"rgba(180,222,44,1)","line":{"color":"rgba(180,222,44,1)"}},"line":{"color":"rgba(180,222,44,1)"},"xaxis":"x","yaxis":"y","frame":null},{"fillcolor":"rgba(253,231,37,0.5)","y":[2361,2542,2161,2803,3160,2378,2547,3059,3436,2979,2740,3937,5280,3208,3479,3527,3869,2031,2654,3984,2783,2761,3937,3660,4474,1916,4692,3219,2496,3026],"type":"box","name":"Syracuse Hancock Airport","marker":{"color":"rgba(253,231,37,1)","line":{"color":"rgba(253,231,37,1)"}},"line":{"color":"rgba(253,231,37,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="chart-c" class="section level3">
+<h3>Chart C</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<div id="htmlwidget-d99280525966053bafed" style="width:576px;height:460.8px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d99280525966053bafed">{"x":{"visdat":{"1bf53b6dd76f":["function () ","plotlyVisDat"]},"cur_data":"1bf53b6dd76f","attrs":{"1bf53b6dd76f":{"x":{},"y":{},"color":{},"colors":"viridis","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"bar"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Number of Years with over 1000 mm Precipitation in 10 Locations in NY from 1981-2010","xaxis":{"domain":[0,1],"automargin":true,"title":"Location","type":"category","categoryorder":"array","categoryarray":["Rochester","Syracuse Hancock Airport","Albany Airport","Binghamton","Lowville","Buffalo","JFK Airport","Laguardia Airport","Oswego","Mohonk Lake"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"n"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["Rochester"],"y":[4],"type":"bar","name":"Rochester","marker":{"color":"rgba(68,1,84,1)","line":{"color":"rgba(68,1,84,1)"}},"textfont":{"color":"rgba(68,1,84,1)"},"error_y":{"color":"rgba(68,1,84,1)"},"error_x":{"color":"rgba(68,1,84,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Syracuse Hancock Airport"],"y":[12],"type":"bar","name":"Syracuse Hancock Airport","marker":{"color":"rgba(72,40,120,1)","line":{"color":"rgba(72,40,120,1)"}},"textfont":{"color":"rgba(72,40,120,1)"},"error_y":{"color":"rgba(72,40,120,1)"},"error_x":{"color":"rgba(72,40,120,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Albany Airport"],"y":[14],"type":"bar","name":"Albany Airport","marker":{"color":"rgba(62,74,137,1)","line":{"color":"rgba(62,74,137,1)"}},"textfont":{"color":"rgba(62,74,137,1)"},"error_y":{"color":"rgba(62,74,137,1)"},"error_x":{"color":"rgba(62,74,137,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Binghamton"],"y":[16],"type":"bar","name":"Binghamton","marker":{"color":"rgba(49,104,142,1)","line":{"color":"rgba(49,104,142,1)"}},"textfont":{"color":"rgba(49,104,142,1)"},"error_y":{"color":"rgba(49,104,142,1)"},"error_x":{"color":"rgba(49,104,142,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Lowville"],"y":[16],"type":"bar","name":"Lowville","marker":{"color":"rgba(38,130,142,1)","line":{"color":"rgba(38,130,142,1)"}},"textfont":{"color":"rgba(38,130,142,1)"},"error_y":{"color":"rgba(38,130,142,1)"},"error_x":{"color":"rgba(38,130,142,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Buffalo"],"y":[18],"type":"bar","name":"Buffalo","marker":{"color":"rgba(31,158,137,1)","line":{"color":"rgba(31,158,137,1)"}},"textfont":{"color":"rgba(31,158,137,1)"},"error_y":{"color":"rgba(31,158,137,1)"},"error_x":{"color":"rgba(31,158,137,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["JFK Airport"],"y":[20],"type":"bar","name":"JFK Airport","marker":{"color":"rgba(53,183,121,1)","line":{"color":"rgba(53,183,121,1)"}},"textfont":{"color":"rgba(53,183,121,1)"},"error_y":{"color":"rgba(53,183,121,1)"},"error_x":{"color":"rgba(53,183,121,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Laguardia Airport"],"y":[22],"type":"bar","name":"Laguardia Airport","marker":{"color":"rgba(109,205,89,1)","line":{"color":"rgba(109,205,89,1)"}},"textfont":{"color":"rgba(109,205,89,1)"},"error_y":{"color":"rgba(109,205,89,1)"},"error_x":{"color":"rgba(109,205,89,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Oswego"],"y":[22],"type":"bar","name":"Oswego","marker":{"color":"rgba(180,222,44,1)","line":{"color":"rgba(180,222,44,1)"}},"textfont":{"color":"rgba(180,222,44,1)"},"error_y":{"color":"rgba(180,222,44,1)"},"error_x":{"color":"rgba(180,222,44,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Mohonk Lake"],"y":[28],"type":"bar","name":"Mohonk Lake","marker":{"color":"rgba(253,231,37,1)","line":{"color":"rgba(253,231,37,1)"}},"textfont":{"color":"rgba(253,231,37,1)"},"error_y":{"color":"rgba(253,231,37,1)"},"error_x":{"color":"rgba(253,231,37,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+
+</div>
+
+<script>
+
+$(document).ready(function () {
+
+  // add bootstrap table styles to pandoc tables
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+
+  // initialize mathjax
+  var script = document.createElement("script");
+  script.type = "text/javascript";
+  script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+  document.getElementsByTagName("head")[0].appendChild(script);
+
+});
+</script>
+
+<div id="flexdashboard-source-code">
+<pre class="line-numbers"><code class="language-r">---
+title: "Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    source_code: embed
+---
+
+```{r, setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(p8105.datasets)
+library(plotly)
+
+data("ny_noaa")
+
+#Select top 10 locations with the most data
+ny_noaa %>% 
+  drop_na() %>% 
+  group_by(id) %>% 
+  summarize(n_obs = n()) %>% 
+  mutate(rank = min_rank(desc(n_obs))) %>% 
+  filter(rank < 11) %>% 
+  pull(id)
+
+ny_noaa = 
+  ny_noaa %>% 
+  drop_na() %>% 
+  filter(id %in% c("USC00304912", "USC00305426", "USC00306314", "USW00004725", "USW00014732", "USW00014733", "USW00014735", "USW00014768", "USW00014771", "USW00094789")) %>% 
+  mutate(
+    location = recode(
+      id,
+      USC00304912 = "Lowville",
+      USC00305426 = "Mohonk Lake",
+      USC00306314 = "Oswego",
+      USW00004725 = "Binghamton",
+      USW00014732 = "Laguardia Airport",
+      USW00014733 = "Buffalo",
+      USW00014735 = "Albany Airport",
+      USW00014768 = "Rochester",
+      USW00014771 = "Syracuse Hancock Airport",
+      USW00094789 = "JFK Airport"),
+    tmin = as.numeric(tmin) / 10,
+    tmax = as.numeric(tmax) / 10) %>% 
+  select(location, id, everything())
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+ny_noaa_yr = 
+  ny_noaa %>%
+  mutate(year = lubridate::year(date)) %>% 
+  group_by(location, year) %>% 
+  summarize(
+    tmin_mean = mean(tmin),
+    tmax_mean = mean(tmax),
+    prcp_total = sum(prcp/10))
+
+ny_noaa_yr %>% 
+  mutate(text_label = str_c("Location: ", location, "\nYear: ", year, "\nPrecipitation(mm): ", prcp_total)) %>% 
+  plot_ly(
+    x = ~tmin_mean, y = ~tmax_mean, type = "scatter", mode = "markers",
+    color = ~prcp_total, text = ~text_label) %>% 
+  layout(
+    title = "Annual Avg. Tmax vs Annual Avg. Tmin in 10 Locations in NY",
+    xaxis = list(title = "Avg. Tmin"),
+    yaxis = list(title = "Avg. Tmax"))
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+ny_noaa %>%
+  mutate(year = lubridate::year(date)) %>% 
+  group_by(location, year) %>%
+  summarize(snow_total = sum(snow)) %>%
+  mutate(location = fct_reorder(location, snow_total)) %>% 
+  plot_ly(y = ~snow_total, color = ~location, type = "box", colors = "viridis")
+```
+
+### Chart C
+
+```{r}
+ny_noaa %>% 
+  mutate(year = lubridate::year(date)) %>% 
+  group_by(location, year) %>% 
+  summarize(prcp_total = sum(prcp/10)) %>% 
+  filter(prcp_total > 1000) %>% 
+  group_by(location) %>% 
+  summarize(n = n()) %>% 
+  mutate(location = fct_reorder(location, n)) %>% 
+  plot_ly(x = ~location, y = ~n, color = ~location, type = "bar", colors = "viridis") %>% 
+  layout(
+    title = "Number of Years with over 1000 mm Precipitation in 10 Locations in NY from 1981-2010",
+    xaxis = list(title = "Location"),
+    yaxis = list(title = "n"))
+```
+
+</code></pre>
+</div>
+<script type="text/javascript">
+$(document).ready(function () {
+  FlexDashboard.init({
+    theme: "cosmo",
+    fillPage: true,
+    orientation: "columns",
+    storyboard: false,
+    defaultFigWidth: 576,
+    defaultFigHeight: 460,
+    defaultFigWidthMobile: 360,
+    defaultFigHeightMobile: 460,
+    resize_reload: true
+  });
+});
+</script>
+
+</body>
+</html>

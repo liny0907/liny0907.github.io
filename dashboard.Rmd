@@ -1,0 +1,106 @@
+---
+title: "Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    source_code: embed
+---
+
+```{r, setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(p8105.datasets)
+library(plotly)
+
+data("ny_noaa")
+
+#Select top 10 locations with the most data
+ny_noaa %>% 
+  drop_na() %>% 
+  group_by(id) %>% 
+  summarize(n_obs = n()) %>% 
+  mutate(rank = min_rank(desc(n_obs))) %>% 
+  filter(rank < 11) %>% 
+  pull(id)
+
+ny_noaa = 
+  ny_noaa %>% 
+  drop_na() %>% 
+  filter(id %in% c("USC00304912", "USC00305426", "USC00306314", "USW00004725", "USW00014732", "USW00014733", "USW00014735", "USW00014768", "USW00014771", "USW00094789")) %>% 
+  mutate(
+    location = recode(
+      id,
+      USC00304912 = "Lowville",
+      USC00305426 = "Mohonk Lake",
+      USC00306314 = "Oswego",
+      USW00004725 = "Binghamton",
+      USW00014732 = "Laguardia Airport",
+      USW00014733 = "Buffalo",
+      USW00014735 = "Albany Airport",
+      USW00014768 = "Rochester",
+      USW00014771 = "Syracuse Hancock Airport",
+      USW00094789 = "JFK Airport"),
+    tmin = as.numeric(tmin) / 10,
+    tmax = as.numeric(tmax) / 10) %>% 
+  select(location, id, everything())
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+ny_noaa_yr = 
+  ny_noaa %>%
+  mutate(year = lubridate::year(date)) %>% 
+  group_by(location, year) %>% 
+  summarize(
+    tmin_mean = mean(tmin),
+    tmax_mean = mean(tmax),
+    prcp_total = sum(prcp/10))
+
+ny_noaa_yr %>% 
+  mutate(text_label = str_c("Location: ", location, "\nYear: ", year, "\nPrecipitation(mm): ", prcp_total)) %>% 
+  plot_ly(
+    x = ~tmin_mean, y = ~tmax_mean, type = "scatter", mode = "markers",
+    color = ~prcp_total, text = ~text_label) %>% 
+  layout(
+    title = "Annual Avg. Tmax vs Annual Avg. Tmin in 10 Locations in NY",
+    xaxis = list(title = "Avg. Tmin"),
+    yaxis = list(title = "Avg. Tmax"))
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+ny_noaa %>%
+  mutate(year = lubridate::year(date)) %>% 
+  group_by(location, year) %>%
+  summarize(snow_total = sum(snow)) %>%
+  mutate(location = fct_reorder(location, snow_total)) %>% 
+  plot_ly(y = ~snow_total, color = ~location, type = "box", colors = "viridis")
+```
+
+### Chart C
+
+```{r}
+ny_noaa %>% 
+  mutate(year = lubridate::year(date)) %>% 
+  group_by(location, year) %>% 
+  summarize(prcp_total = sum(prcp/10)) %>% 
+  filter(prcp_total > 1000) %>% 
+  group_by(location) %>% 
+  summarize(n = n()) %>% 
+  mutate(location = fct_reorder(location, n)) %>% 
+  plot_ly(x = ~location, y = ~n, color = ~location, type = "bar", colors = "viridis") %>% 
+  layout(
+    title = "Number of Years with over 1000 mm Precipitation in 10 Locations in NY from 1981-2010",
+    xaxis = list(title = "Location"),
+    yaxis = list(title = "n"))
+```
+
