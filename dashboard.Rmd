@@ -7,7 +7,7 @@ output:
     source_code: embed
 ---
 
-```{r, setup, include=FALSE}
+```{r, setup, include = FALSE}
 library(flexdashboard)
 library(tidyverse)
 library(p8105.datasets)
@@ -42,8 +42,10 @@ ny_noaa =
       USW00014771 = "Syracuse Hancock Airport",
       USW00094789 = "JFK Airport"),
     tmin = as.numeric(tmin) / 10,
-    tmax = as.numeric(tmax) / 10) %>% 
+    tmax = as.numeric(tmax) / 10,
+    prcp = prcp / 10) %>% 
   select(location, id, everything())
+ny_noaa
 ```
 
 Column {data-width=650}
@@ -52,22 +54,19 @@ Column {data-width=650}
 ### Temperatures and precipitation in 10 locations in NY 1981-2010
 
 ```{r}
-ny_noaa_yr = 
-  ny_noaa %>%
+ny_noaa %>%
   mutate(year = lubridate::year(date)) %>% 
   group_by(location, year) %>% 
   summarize(
     tmin_mean = mean(tmin),
     tmax_mean = mean(tmax),
-    prcp_total = sum(prcp/10))
-
-ny_noaa_yr %>% 
+    prcp_total = sum(prcp)) %>% 
   mutate(text_label = str_c("Location: ", location, "\nYear: ", year, "\nPrecipitation(mm): ", prcp_total)) %>% 
   plot_ly(
     x = ~tmin_mean, y = ~tmax_mean, type = "scatter", mode = "markers",
     color = ~prcp_total, text = ~text_label) %>% 
   layout(
-    xaxis = list(title = "Avg. Tmin"),
+    xaxis = list(title = "Avg. Tmin", zeroline = FALSE, range = c(-5, 15)),
     yaxis = list(title = "Avg. Tmax"))
 ```
 
@@ -79,11 +78,13 @@ Column {data-width=350}
 ```{r}
 ny_noaa %>%
   mutate(year = lubridate::year(date)) %>% 
-  group_by(year, location) %>%
+  group_by(location, year) %>%
   summarize(snow_total = sum(snow)) %>%
-  mutate(location = fct_reorder(location, snow_total, .fun = median)) %>% 
+  ungroup() %>% 
+  mutate(location = fct_reorder(location, snow_total)) %>% 
   plot_ly(y = ~snow_total, color = ~location, type = "box", colors = "viridis")
 ```
+
 
 ### Number of years with over 1000 mm Precipitation by locations
 
@@ -91,10 +92,10 @@ ny_noaa %>%
 ny_noaa %>% 
   mutate(year = lubridate::year(date)) %>% 
   group_by(location, year) %>% 
-  summarize(prcp_total = sum(prcp/10)) %>% 
+  summarize(prcp_total = sum(prcp)) %>% 
   filter(prcp_total > 1000) %>% 
-  group_by(location) %>% 
-  summarize(n = n()) %>% 
+  ungroup() %>% 
+  count(location) %>% 
   mutate(location = fct_reorder(location, n)) %>% 
   plot_ly(x = ~location, y = ~n, color = ~location, type = "bar", colors = "viridis") %>% 
   layout(
