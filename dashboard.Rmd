@@ -1,5 +1,5 @@
 ---
-title: "Dashboard"
+title: "NY NOAA Dashboard"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -49,7 +49,7 @@ ny_noaa =
 Column {data-width=650}
 -----------------------------------------------------------------------
 
-### Chart A
+### Temperatures and precipitation in 10 locations in NY 1981-2010
 
 ```{r}
 ny_noaa_yr = 
@@ -67,7 +67,6 @@ ny_noaa_yr %>%
     x = ~tmin_mean, y = ~tmax_mean, type = "scatter", mode = "markers",
     color = ~prcp_total, text = ~text_label) %>% 
   layout(
-    title = "Annual Avg. Tmax vs Annual Avg. Tmin in 10 Locations in NY",
     xaxis = list(title = "Avg. Tmin"),
     yaxis = list(title = "Avg. Tmax"))
 ```
@@ -75,18 +74,18 @@ ny_noaa_yr %>%
 Column {data-width=350}
 -----------------------------------------------------------------------
 
-### Chart B
+### Annual snowfall for 10 locations in NY 1981-2010
 
 ```{r}
 ny_noaa %>%
   mutate(year = lubridate::year(date)) %>% 
-  group_by(location, year) %>%
+  group_by(year, location) %>%
   summarize(snow_total = sum(snow)) %>%
-  mutate(location = fct_reorder(location, snow_total)) %>% 
+  mutate(location = fct_reorder(location, snow_total, .fun = median)) %>% 
   plot_ly(y = ~snow_total, color = ~location, type = "box", colors = "viridis")
 ```
 
-### Chart C
+### Number of years with over 1000 mm Precipitation by locations
 
 ```{r}
 ny_noaa %>% 
@@ -99,8 +98,7 @@ ny_noaa %>%
   mutate(location = fct_reorder(location, n)) %>% 
   plot_ly(x = ~location, y = ~n, color = ~location, type = "bar", colors = "viridis") %>% 
   layout(
-    title = "Number of Years with over 1000 mm Precipitation in 10 Locations in NY from 1981-2010",
-    xaxis = list(title = "Location"),
+    xaxis = list(title = "Location", tickangle = 45),
     yaxis = list(title = "n"))
 ```
 
