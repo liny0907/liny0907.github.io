@@ -14,13 +14,13 @@ My Name is Lin Yang. I'm currently a first year MS Biostatistics student at Colu
 ## About me
 I obtained my BA in Molecular and Cell Biology from University of California, Berkeley. With a strong background in biology, I'm currently studying Biostatistics which I'm passionate about. I love data analysis, my career goal is to become a Biostatistician who performs data analysis in healthcare field or a data scientisit in any other fields.
 
-I have strong molecular biology experimental skills. I've volunteered as a lab assistant in Regenerative Sciences Institute, San Jose, CA. I'm also involved in other fields. I've been an intern English editor in a top English online education company in China. More details about my experience can be found in my [resume](Lin_Yang_Resume.pdf).
+I have strong molecular biology experimental skills. I've volunteered as a lab assistant in Regenerative Sciences Institute, San Jose, CA. I'm also involved in other fields. I've been an intern English editor in a top English online education company in China. More details about my experience can be found [here](Lin_Yang_Resume.pdf).
 
 
 ## Contact Information
 
 Lin Yang\
-408-666-548850\
+408-666-5488\
 50 Haven Ave\
 New York, NY 10032
 

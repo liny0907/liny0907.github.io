@@ -43,7 +43,8 @@ ny_noaa =
       USW00094789 = "JFK Airport"),
     tmin = as.numeric(tmin) / 10,
     tmax = as.numeric(tmax) / 10,
-    prcp = prcp / 10) %>% 
+    prcp = prcp / 10) %>%
+  mutate(year = lubridate::year(date)) %>% 
   select(location, id, everything())
 ny_noaa
 ```
@@ -51,49 +52,49 @@ ny_noaa
 Column {data-width=650}
 -----------------------------------------------------------------------
 
-### Temperatures and precipitation in 10 locations in NY 1981-2010
+### Average temperatures and annual precipitation in 10 locations in NY 1981-2010
 
 ```{r}
 ny_noaa %>%
-  mutate(year = lubridate::year(date)) %>% 
   group_by(location, year) %>% 
   summarize(
     tmin_mean = mean(tmin),
     tmax_mean = mean(tmax),
     prcp_total = sum(prcp)) %>% 
-  mutate(text_label = str_c("Location: ", location, "\nYear: ", year, "\nPrecipitation(mm): ", prcp_total)) %>% 
+  mutate(text_label = str_c("Location: ", location, "\nYear: ", year, "\nPrecipitation (mm): ", prcp_total)) %>% 
   plot_ly(
     x = ~tmin_mean, y = ~tmax_mean, type = "scatter", mode = "markers",
     color = ~prcp_total, text = ~text_label) %>% 
   layout(
-    xaxis = list(title = "Avg. Tmin", zeroline = FALSE, range = c(-5, 15)),
-    yaxis = list(title = "Avg. Tmax"))
+    xaxis = list(title = "Avg. Tmin (C)", zeroline = FALSE, range = c(-5, 15)),
+    yaxis = list(title = "Avg. Tmax (C)"))
 ```
 
 Column {data-width=350}
 -----------------------------------------------------------------------
 
-### Annual snowfall for 10 locations in NY 1981-2010
+### Distribution of annual snowfall for 10 locations in NY 1981-2010
 
 ```{r}
 ny_noaa %>%
-  mutate(year = lubridate::year(date)) %>% 
   group_by(location, year) %>%
-  summarize(snow_total = sum(snow)) %>%
+  summarize(annual_snow = sum(snow)) %>%
   ungroup() %>% 
-  mutate(location = fct_reorder(location, snow_total)) %>% 
-  plot_ly(y = ~snow_total, color = ~location, type = "box", colors = "viridis")
+  mutate(location = fct_reorder(location, annual_snow)) %>% 
+  plot_ly(y = ~annual_snow, color = ~location, type = "box", colors = "viridis") %>% 
+  layout(
+    xaxis = list(title = "Location", tickangle = 45),
+    yaxis = list(title = "Annual Snowfall (mm)"))
 ```
 
 
-### Number of years with over 1000 mm Precipitation by locations
+### Number of years with over 1000 mm precipitation by locations
 
 ```{r}
 ny_noaa %>% 
-  mutate(year = lubridate::year(date)) %>% 
   group_by(location, year) %>% 
   summarize(prcp_total = sum(prcp)) %>% 
-  filter(prcp_total > 1000) %>% 
+  filter(prcp_total > 1000) %>%
   ungroup() %>% 
   count(location) %>% 
   mutate(location = fct_reorder(location, n)) %>% 
