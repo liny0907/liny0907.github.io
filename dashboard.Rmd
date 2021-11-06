@@ -49,7 +49,7 @@ ny_noaa =
 ny_noaa
 ```
 
-Column {data-width=650}
+Column {data-width=550}
 -----------------------------------------------------------------------
 
 ### Average temperatures and annual precipitation in 10 locations in NY 1981-2010
@@ -70,7 +70,7 @@ ny_noaa %>%
     yaxis = list(title = "Avg. Tmax (C)"))
 ```
 
-Column {data-width=350}
+Column {data-width=450}
 -----------------------------------------------------------------------
 
 ### Distribution of annual snowfall for 10 locations in NY 1981-2010
